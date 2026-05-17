@@ -13,8 +13,11 @@ This skill is the orchestrator and session-start overlay for Realty Stack. When 
 1. Loads `knowledge/voice-guide.md` — the 6 brand voice tenets every output respects
 2. Loads `knowledge/constitution.md` — the 7 constitutional tenets (T1, T5, T8, T14, T15, T16, T18)
 3. Loads `knowledge/fair-housing.md` — language guardrails for any contact-facing output
-4. Announces which skills are available in this version + their trigger phrases
-5. Confirms loaded with: `✓ Realty Stack loaded (v<version>)`
+4. **Load the realtor's voice profile** from `~/.config/realty-stack/voice-profile.md` if it exists. Inject the contents into context so every Realty Stack drafting skill can match the agent's voice without re-asking for samples.
+   - **If the file is missing:** do not block. The SessionStart hook should have already prompted for onboarding; if the realtor declined, respect that and proceed. Any drafting skill invoked later will run voice-draft onboarding inline.
+   - **If the file is corrupted** (not parseable as Markdown with expected sections — Agent Profile, Email Voice, Text Voice): print a friendly note ("Your voice profile looks corrupted — re-running onboarding") and invoke voice-draft.
+5. Announces which skills are available in this version + their trigger phrases
+6. Confirms loaded with: `✓ Realty Stack loaded (v<version>)`
 
 After this skill loads, the assistant should:
 - Treat every output produced inside this session as Realty-Stack-governed
@@ -62,7 +65,10 @@ Full text: `knowledge/constitution.md`.
 ## Compliance baseline (always in effect)
 
 Every contact-facing output checked against:
+- Brand voice tenets (`knowledge/voice-guide.md`)
+- Realty Stack constitution (`knowledge/constitution.md`)
 - Fair Housing Act + state extensions (`knowledge/fair-housing.md`)
+- The realtor's captured voice profile (`~/.config/realty-stack/voice-profile.md` — loaded if present; if absent, onboarding triggers)
 - NAR Code of Ethics (future: `knowledge/nar-code-of-ethics.md`)
 - RESPA basics (future: `knowledge/respa-basics.md`)
 - TCPA windows (future: `knowledge/tcpa-windows.md`)
