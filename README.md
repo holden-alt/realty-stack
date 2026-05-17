@@ -2,7 +2,7 @@
 
 **AI skills for residential real estate agents who actually close deals.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.1-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.2-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
 
 Open-source. MIT. Free. Built by a working realtor who codes — for working realtors who want their AI to sound like *them*, not like a marketing intern.
 
@@ -31,37 +31,47 @@ Then in any Claude Code or Cowork session, ask Claude to "load realty stack" (or
 
 After that, just describe what you need: *"draft a text to Sarah about the new Madison Ave listing"* — Claude routes to the right skill (`voice-draft` in this case) automatically. No slash-typing required.
 
-**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.1. We'll add them based on demand from real users.
+**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.2. We'll add them based on demand from real users.
 
 ---
 
 ## See it work
 
-A real follow-up Holden needed to send last week:
+Real onboarding sequence from a fresh install:
 
-> **Context:** Lead came in 6 weeks ago through a holdengr.com inquiry on a $425K Heritage Hill property. Toured once, said the kitchen needed work and went quiet. New listing dropped this week — same neighborhood, $389K, fully renovated kitchen.
+**Install:** `claude plugins install github.com/holdengr/realty-stack` — done.
 
-**What Holden typed in Claude Code:** *"Draft a text to Sarah about the new Madison Ave listing. Her last objection was the kitchen. This one's renovated. Don't push."* (Plus 3 past texts pasted in as voice samples.)
+**First Cowork session after install:** Realty Stack auto-prompts:
 
-Realty Stack auto-routed to the `voice-draft` skill (description-matched on "draft a text"), loaded the voice guide and fair-housing checks, and returned:
+> *"Realty Stack is loaded. Before you use any skills, let's capture your writing voice — takes about 5 minutes, one-time. Want to do it now?"*
 
-> Sarah — new listing dropped on Madison Ave this morning. 4 bed, kitchen's already done (white shaker, quartz, gas range). $389K. Want me to send the link?
+**Holden:** "yes"
+
+→ Voice-draft walks through: name, brokerage, market, signoffs (4 quick fields), then 3-5 real emails Holden pastes, then 3-5 real texts. Analysis runs (~30 seconds). Returns:
+
+> *Email voice: short, direct. Em-dashes for clauses. Opens with "Hey [name]," or "[Name] —". Signs "— Holden" casually, "Holden Richardson | 616 Realty" formally. No exclamation points unless an offer actually got accepted...*
 >
-> — Holden
+> *Text voice: very clipped — fragments encouraged. Opens with first name only or nothing. Signs "— H" or none. Em-dashes everywhere. Never emoji unless the contact uses them first...*
+>
+> *Example email (follow-up to hot buyer about new comparable):* [drafted email in Holden's voice]
+>
+> *Example text (past-client neighborhood listing alert):* [drafted text in Holden's voice]
+>
+> *"Sound like you? Or refine?"*
 
-That's the draft. Sarah replies in 12 minutes asking for the link. Showing booked Thursday.
+**Holden:** "yes that's me" → onboarding complete, voice profile written to `~/.config/realty-stack/voice-profile.md`. **Total time: ~5 minutes.**
 
-The skill loaded Holden's voice guide, matched his sentence length and signoff style from the samples, declined to manufacture urgency (T1 + the no-push promise), checked the copy against fair housing rules (no problem flags), and returned the draft with a one-line confidence note.
+**From this point forward**, every Realty Stack skill (follow-up-draft, listing-description, meeting-distill, etc.) produces output in Holden's voice automatically. He never pastes voice samples again.
 
 ---
 
-## Skills (v0.0.1)
+## Skills (v0.0.2)
 
 Skills auto-route based on what you ask Claude. You don't type slashes — you describe what you need.
 
 | Skill | Triggers on | What it does |
 |---|---|---|
-| `voice-draft` | "draft a text to...", "write an email about...", "what should I say to...", "compose a follow-up for..." | Paste 3 past samples + your intent → drafted reply in your voice, fair-housing-checked. |
+| `voice-draft` (one-time, on install) | Auto-fires on first session post-install; also "set up my voice", "onboard me", "configure realty stack" | Captures the realtor's email + text voice + basic profile. Persists to `~/.config/realty-stack/voice-profile.md`. Future drafting skills auto-use it. ~5 min one-time setup. |
 
 More skills land daily — see [CHANGELOG.md](CHANGELOG.md) for the rolling release log.
 
