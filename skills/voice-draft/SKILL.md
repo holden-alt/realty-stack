@@ -1,6 +1,6 @@
 ---
 name: voice-draft
-description: This skill should be used when a real estate agent asks to "set up my voice", "capture my voice", "onboard me", "first time setup", "complete realty stack setup", "load my voice", "I just installed", or "configure realty stack" — i.e., for the one-time onboarding that captures the agent's writing voice (email + text) so all other Realty Stack drafting skills produce output in their voice. Walks the agent through profile collection, sample submission, analysis, confirmation, and refinement; persists the result to ~/.config/realty-stack/voice-profile.md.
+description: This skill should be used when a real estate agent asks to "set up my voice", "capture my voice", "onboard me", "first time setup", "complete realty stack setup", "load my voice", "I just installed", or "configure realty stack". One-time onboarding that persists voice profile to ~/.config/realty-stack/voice-profile.md for downstream drafting skills.
 version: 0.0.2
 ---
 
@@ -22,7 +22,7 @@ If the realtor says yes (or any natural affirmation), activate this skill immedi
 
 If the realtor declines or says "later," respect that and answer their actual question — but note that any Realty Stack drafting skill invoked later will trigger voice-draft inline before completing their request.
 
-**Path B — First-skill-invocation fallback (belt + suspenders).** If the realtor bypasses the SessionStart prompt (dismissed, programmatic session, hook failure), the first time they invoke any Realty Stack drafting skill, that skill detects the missing voice profile and runs this onboarding flow to completion before continuing with the realtor's original request.
+**Path B — First-skill-invocation fallback (belt + suspenders).** If the realtor bypasses the SessionStart prompt (dismissed, programmatic session, hook failure), the first time they invoke any Realty Stack drafting skill, that skill detects the missing voice profile and runs this onboarding flow to completion before continuing with the realtor's original request. The detection mechanism is documented in CLAUDE.md's "Voice profile contract" section — every drafting skill must check for the profile file at the top of its workflow.
 
 ---
 
@@ -64,6 +64,8 @@ Ask for 3-5 substantial real estate texts, same rationale. Prompt:
 **Minimum threshold:** Same as Step B — at least 2 substantial samples before proceeding. Push back with the same prompt if fewer are provided.
 
 ### Step D — Analyze Both Batches
+
+Before analyzing, load `knowledge/voice-guide.md` so the brand voice tenets shape what gets captured (skills writing in the agent's voice still respect the 6 tenets — direct, calm, practical, etc.).
 
 Analyze the email samples and text samples independently. For each channel, build a voice profile using the file format specified in the "Voice profile file format" section below. Note:
 
@@ -108,13 +110,9 @@ Accept freeform feedback in plain English. Any complaint or correction is valid 
 
 > *"Tell me what's off — be as specific or as gut-feel as you want, both work."*
 
-Per round of feedback:
-1. Adjust the voice profile per the feedback
-2. Regenerate both example outputs (email + text) using the updated profile
-3. Present the updated summary and examples
-4. Ask again: *"Better? Or still needs work?"*
+Per round of feedback: adjust the voice profile, regenerate both examples (email + text) using the updated profile, present the updated summary and examples, then ask: *"Better? Or still needs work?"*
 
-Loop until the realtor says "yes that's me," "looks good," "ship it," or any semantic equivalent.
+Loop until approval. Accept "yes that's me," "looks good," "ship it," "good enough," "save it," or "OK as-is" — any of these means "save the current state, don't refine further." Treat as approval and proceed to Step G.
 
 ### Step G — Write the Voice Profile File
 
@@ -155,7 +153,7 @@ Refined: [ISO date] ([N] rounds)
 ## Agent Profile
 - Name: [Full Name]
 - Brokerage: [Brokerage]
-- Market: [Primary Market]
+- Primary Market: [Primary Market]
 - Email signoff: "[casual signoff]" (casual) / "[formal signoff]" (formal)
 - Text signoff: "[text signoff]" or none
 
@@ -214,7 +212,7 @@ Refined: 2026-05-16 (2 rounds)
 ## Agent Profile
 - Name: Holden Richardson
 - Brokerage: 616 Realty
-- Market: Grand Rapids, MI
+- Primary Market: Grand Rapids, MI
 - Email signoff: "— Holden" (casual) / "Holden Richardson | 616 Realty" (formal)
 - Text signoff: "— H" or none
 
