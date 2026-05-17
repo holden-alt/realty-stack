@@ -130,6 +130,36 @@ Every Realty Stack session loads the realtor's voice profile from `~/.config/rea
 
 ---
 
+## Brand kit contract
+
+Every Realty Stack session loads the realtor's brand kit from `~/.config/realty-stack/brand-kit.md` via the `using-realty-stack` overlay. The file format and full spec live in `docs/specs/2026-05-17-brand-kit-capture-design.md`. Summary of what each brand kit contains:
+
+- **Wordmark** — left segment, separator, right segment (for CSS-rendered HTML text wordmark)
+- **Tagline** — agent's positioning line (optional)
+- **Colors** — 8 hex values: bg, bg-deep, ink, ink-soft, rule, accent, red, green
+- **Typography** — display font (Google Fonts), mono font, optional body font
+- **Asset files** — optional paths to logo, wordmark mark, headshot (stored in `~/.config/realty-stack/brand-assets/`)
+- **Voice / positioning notes** — freeform brand discipline notes
+
+### What every Realty Stack visual-output skill MUST do
+
+1. **Assume the brand kit is in context.** Don't ask the agent for colors/fonts/wordmark. They onboarded once via brand-kit-capture.
+2. **Use the captured colors** for every background / text / border / accent decision in generated HTML.
+3. **Use the captured typography** for all text rendering.
+4. **Render the wordmark as CSS-styled HTML text** (sharp at any resolution, no image dependency).
+5. **Base64-embed asset files** (logo, headshot) in generated HTML for true self-containment (works when emailed, hosted, printed).
+6. **Fail gracefully if the brand kit is missing.** Detect the absence, run brand-kit-capture inline to onboard, then complete the agent's original request. Never produce un-branded output silently.
+
+### What every Realty Stack visual-output skill MUST NOT do
+
+- Ask the agent to provide colors, fonts, wordmark, or assets every invocation
+- Use a default brand or another agent's brand
+- Reference asset files by path in HTML output (breaks self-containment) — always base64-embed
+- Persist anything to `~/.config/realty-stack/brand-kit.md` or `~/.config/realty-stack/brand-assets/` — that's brand-kit-capture's exclusive responsibility
+- Use brass / accent as a background fill (it's a pigment, not a fill — single-character / thin-bar / single-decorative-element only per the design discipline)
+
+---
+
 ## Testing rules
 
 Every new skill MUST be tested on Holden's real work before commit. The PR description includes:
