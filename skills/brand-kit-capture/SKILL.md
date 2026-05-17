@@ -42,6 +42,8 @@ Wordmark renders as CSS-styled HTML text in all visual-output skill outputs — 
 
 ### Step C — Brand colors (8 hex values)
 
+**Minimum required: bg, ink, accent.** These three cannot be derived — the agent must provide hex values for at least these. If any of the three is missing, ask the agent to provide it before proceeding. The remaining five (bg-deep, ink-soft, rule, red, green) can be derived per the "Default suggestions when agent provides incomplete data" section if not provided.
+
 Ask for hex values for each of the following semantic color roles:
 
 | Role | Purpose |
@@ -70,6 +72,13 @@ Ask for:
 > *"That font isn't on Google Fonts — pick a similar one (like [suggest 2-3 similar options]), or paste a CSS @font-face declaration and I'll save it verbatim."*
 
 Do not proceed to Step E until all provided font names pass validation.
+
+**Escape hatch:** If Google Fonts validation fails twice for the same font name (e.g., network error, font genuinely not on Google Fonts), accept one of three resolutions:
+1. Agent provides a CSS `@font-face` declaration (paste the CSS), save it with the brand kit as a raw block
+2. Agent says "use it anyway" explicitly — save the font name, log a warning in the brand kit's voice/positioning notes section ("FONT_NAME could not be validated on Google Fonts; verify availability before generating HTML outputs")
+3. Agent picks a Google Font alternative
+
+Do not block indefinitely on font validation. Two failed attempts = move on per one of the three resolutions.
 
 ### Step E — Optional asset files
 
@@ -104,6 +113,10 @@ Return a single response containing all three of the following:
 2. **Inline preview:**
    - Colors: list each role + hex clearly (e.g., `bg: #F4F3EF`, `accent: #B08A44`), with a plain-text label of what derived values were suggested if any
    - Wordmark: render as plain text showing the structure (e.g., `Holden / GR` — noting which separator is accent-colored in outputs)
+   - **Include font confirmation in the preview:**
+     - Display font name + weights: e.g., "Inter (400, 500, 600, 700)"
+     - Mono font name + weights: e.g., "JetBrains Mono (400, 500)"
+     - Body font (if different): e.g., "Body: Lora (400, 600)"
 
 3. Close with: *"Sound right? Or tell me what's off."*
 
@@ -129,7 +142,9 @@ Write the file ONLY after the agent approves the refinement — never before. No
 
 2. Confirm any asset files have already been copied to `brand-assets/` (done in Step E). If any copy was deferred, run it now.
 
-3. Use the Write tool to save `~/.config/realty-stack/brand-kit.md` using the file format specified in "Brand kit file format" below.
+3. Use the Write tool to save `~/.config/realty-stack/brand-kit.md` using the file format specified in "Brand kit file format" below. On initial capture (zero refinement rounds), omit the `Refined:` line entirely — do not write "Refined: (none)" or "Refined: [date] (0 rounds)". After the first refinement round, add `Refined: [ISO date] (1 round)`. Subsequent rounds: `Refined: [ISO date] ([N] rounds)`.
+
+   **If the Write tool fails** (permissions error, disk full, etc.): show the full brand-kit.md content inline as a code block so the agent can save it manually. Message: "Couldn't write the brand kit file automatically. Copy this block and save it to `~/.config/realty-stack/brand-kit.md` yourself:" then output the full file contents in a code fence.
 
 4. Confirm success:
    > *"Brand kit saved. Every Realty Stack visual-output skill (like /cma) will now use these colors, fonts, and assets automatically."*
@@ -143,7 +158,6 @@ Write the file to `~/.config/realty-stack/brand-kit.md` using this exact structu
 ```markdown
 # Realty Stack — Brand Kit for [Agent Full Name]
 Captured: [ISO date]
-Refined: [ISO date] ([N] rounds)
 
 ## Wordmark
 - Left segment: Holden
@@ -193,12 +207,12 @@ When the agent provides fewer than 8 color values, derive the missing ones as fo
 
 | Missing role | Derivation |
 |---|---|
+| **bg, ink, accent — NOT derivable.** | These must come from the agent. Step C requires them. |
 | `bg-deep` | Derive from `bg` by darkening 5-10% (reduce lightness in HSL) |
 | `ink-soft` | Derive from `ink` by lightening 20-30% (increase lightness in HSL) |
 | `rule` | Choose a neutral value roughly halfway between `bg` and `ink-soft` in perceived lightness |
 | `red` | Default `#963c2a` if not provided |
 | `green` | Default `#3d6b3d` if not provided |
-| `accent` | Cannot be derived — must ask the agent; it defines the brand's signature color |
 
 When suggesting derived values, show the hex alongside a plain-English rationale (e.g., *"bg-deep: #E8E6DF — bg darkened ~7%"*). Always surface derivations in the Step G confirmation so the agent can override before approval.
 
@@ -210,6 +224,7 @@ When suggesting derived values, show the hex alongside a plain-English rationale
 |---|---|
 | Agent provides only 2-3 colors of the 8 | Suggest tasteful defaults per the derivation formulas above; show them in Step G; agent approves or overrides |
 | Agent picks a font not on Google Fonts | Push back; suggest 2-3 similar Google Font alternatives; offer @font-face paste fallback |
+| Google Fonts validation fails twice for same font | Offer 3 resolutions: paste @font-face CSS, say "use it anyway" (logged as warning), or pick a GF alternative. Never block indefinitely. |
 | Asset file path doesn't exist | Ask for valid path or offer to skip that asset |
 | Asset file >500KB | Warn about HTML inflation; ask for a smaller version; proceed only if agent confirms |
 | Onboarding interrupted | File not written until approval — next session re-prompts via SessionStart hook |
