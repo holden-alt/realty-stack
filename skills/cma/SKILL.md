@@ -71,26 +71,42 @@ Ask these in a single message to minimize back-and-forth. The question set diffe
 
 ### Step 3 — Collect inputs
 
-Three input categories. Push back when data is insufficient — never analyze on missing data.
+Ask the realtor for inputs using this exact framing:
 
-**Subject property.** Ask the realtor to drop the MLS detail PDF (read it via the Read tool's `pages` parameter — supports up to 20 pages per request) OR paste the structured data inline. Required fields: address, city, county, state, year built, GLA above grade, GLA below grade (finished + unfinished), bed count, bath count (full + half), lot acres, construction type, HVAC system, water/sewer, garage configuration, outbuildings, pool, school district, prior SEV / tax history, prior listing history.
+> *"To run the CMA I need MLS detail PDFs:*
+> *- 1 PDF for the subject property*
+> *- 3-5 PDFs for the comp sales (the MLS 'sold' detail reports)*
+>
+> *Drop them in. I'll read them directly. If you only have one or two for comps, paste in what you have — I'll work with what's there but will flag if there isn't enough to triangulate."*
 
-**Comparable sales — 3 to 5 comps.** Same data shape as the subject. Behavior:
+Read PDFs via the Read tool's `pages` parameter (supports up to 20 pages per request). Pasted structured data is a fallback for any individual property where no PDF is available — it is not co-equal with PDFs.
+
+**REQUIRED for the CMA to run:**
+- Subject property MLS PDF (or basic data: address, GLA, beds, baths, lot size, year built)
+- 3-5 comp MLS PDFs (or basic data for each)
+- Condition rating 1-10 for subject AND each comp (NEVER inferred — always ask explicitly: *"Quick 1-10 condition rating for the subject and each comp? 1 = brand new, 10 = teardown."*)
+
+**Nice to have — use if provided, improvise without:**
+- Tax history / prior SEV
+- Prior listing history
+- Recent improvements / corrections to the MLS data
+- Detailed feature lists (specific HVAC type, fireplace count, exact garage configuration, outbuilding inventory)
+- School district details beyond the district name
+
+If the agent doesn't provide nice-to-haves, DO NOT block. Skip the adjustment line items that depend on missing data, note in the caveats section that those adjustments were skipped due to missing data, and proceed. Tell the agent at the end which optional items would have improved accuracy.
+
+**NEVER make the agent feel like they have to dig through MLS to find tax history or prior listing history.** If they have it casually available, great; if not, move on.
+
+**Comparable sales — 3 to 5 comps.** Behavior:
 
 - **Fewer than 3 comps provided:** push back. *"3 minimum for triangulation. Got 2 more I can look at?"* Do not analyze on insufficient comps.
 - **More than 5 comps provided:** auto-select the top 5 by similarity to the subject (closest GLA, most recent sale, same county, same school district where possible). Explain the choice in one line. Realtor can swap during the Step 7 feedback loop.
 
-**Condition ratings — explicit ask, never inferred.** *"Quick 1-10 condition rating for the subject and each comp? 1 = brand new, 10 = teardown."* MLS data does not surface this — the realtor must rate from their own walk-through or comp inspection. Required for the subject AND every comp.
+**Corrections — optional, not a gate.** Before the first draft runs, ask once:
 
-**Corrections cascade — before any analysis.** MLS data is frequently stale. Before the first draft runs, ask the realtor to verify the high-impact fields on the subject and each comp:
+> *"Anything in the MLS PDFs you know is wrong or outdated? (Common: kitchen renovated since the listing, AC added, bath count off by one.) Optional — if you don't flag anything, I'll trust the MLS data as-is and note that in the caveats."*
 
-- Bath count (the single largest adjustment driver — $7,500 per full bath)
-- HVAC system + central AC
-- Recent renovations (kitchen, baths, mechanicals)
-- Basement/foundation type + finish level
-- Any other facts the realtor knows differ from MLS
-
-Lock corrections before adjustment analysis begins. If the realtor refuses ("just use the MLS data"), honor it and flag in caveats: *"Adjustments based on MLS data as-provided. Verify against current property condition before presenting."*
+The corrections cascade triggers ONLY if the agent flags something. If they say "looks good" or skip, proceed with MLS data as-is and flag in caveats: *"Adjustments based on MLS data as-provided. Verify against current property condition before presenting."*
 
 ### Step 4 — Live research phase
 

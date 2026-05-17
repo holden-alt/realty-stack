@@ -1468,21 +1468,17 @@ tr.subtotal td {
           <div class="amount" id="otherAmt">$0</div>
         </div>
 
-        <div class="calc-total">
-          <div class="item">Total Monthly Payment</div>
-          <div class="amount" id="totalMonthly">$0</div>
-        </div>
       </div>
     </div>
 
     <div class="calc-result">
       <div>
-        <div class="label">Estimated Cash to Close</div>
-        <div class="sublabel">Down payment + ~3% closing costs estimate</div>
+        <div class="label">Total Monthly Payment</div>
+        <div class="sublabel">PITI + MIP (if applicable) + other monthly costs</div>
       </div>
       <div>
-        <div class="net-amount" id="cashToClose">$0</div>
-        <div class="cost-pct" id="downPctDisplay">DOWN · 20%</div>
+        <div class="net-amount" id="totalMonthlyAnchor">$0</div>
+        <div class="cost-pct" id="cashToCloseDisplay">CASH TO CLOSE · $0</div>
       </div>
     </div>
   </div>
@@ -1592,9 +1588,8 @@ function recalc() {
     otherLine.style.display = 'none';
   }
 
-  document.getElementById('totalMonthly').textContent = fmt(totalMonthly);
-  document.getElementById('cashToClose').textContent = fmt(cashToClose);
-  document.getElementById('downPctDisplay').textContent = `DOWN · ${downPct.toFixed(1)}%`;
+  document.getElementById('totalMonthlyAnchor').textContent = fmt(totalMonthly);
+  document.getElementById('cashToCloseDisplay').textContent = `CASH TO CLOSE · ${fmt(cashToClose)}`;
 }
 
 Object.values(inputs).forEach(input => input.addEventListener('input', recalc));
