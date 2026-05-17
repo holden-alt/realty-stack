@@ -104,6 +104,32 @@ If a skill needs deterministic computation (math, formatting, parsing), use `ski
 
 ---
 
+## Voice profile contract
+
+Every Realty Stack session loads the realtor's voice profile from `~/.config/realty-stack/voice-profile.md` via the `using-realty-stack` overlay. The file format and full spec live in `docs/specs/2026-05-16-voice-draft-v2-design.md` section 5. Summary of what each profile contains:
+
+- **Agent Profile** — name, brokerage, primary market, preferred email signoff, preferred text signoff
+- **Email Voice** — plain-English description + observed patterns (sentence length, openers, signoffs, em-dash usage, hedge word frequency, exclamation rate, emoji policy, notable phrasings)
+- **Text Voice** — same shape as Email Voice, for texts
+- **Source Samples** — raw samples preserved for future re-analysis
+- **Refinement History** — audit log of changes
+
+### What every Realty Stack drafting skill MUST do
+
+1. **Assume the voice profile is in context.** Don't ask the realtor for samples. They onboarded once via voice-draft.
+2. **Match the right voice mode.** Email Voice for emails, FUB notes, long-form. Text Voice for texts, SMS, quick replies.
+3. **Use Agent Profile fields for context.** Their name for signatures, brokerage for signature blocks, primary market for "Practical & Local" specificity.
+4. **Fail gracefully if the profile is missing.** Detect the absence, run voice-draft inline to onboard, then complete the realtor's original request. Never produce un-voiced output silently.
+
+### What every Realty Stack drafting skill MUST NOT do
+
+- Ask the realtor to paste voice samples
+- Make up the realtor's name, brokerage, or market
+- Mix email voice with text voice (e.g., draft a text using the email-voice description)
+- Persist anything to `~/.config/realty-stack/voice-profile.md` — that's voice-draft's exclusive responsibility
+
+---
+
 ## Testing rules
 
 Every new skill MUST be tested on Holden's real work before commit. The PR description includes:
