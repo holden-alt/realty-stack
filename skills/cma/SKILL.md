@@ -1,6 +1,6 @@
 ---
 name: cma
-description: This skill should be used when a real estate agent asks to "create a CMA", "run a CMA", "comparative market analysis", "comp this property", "what's a fair offer", "offer strategy for", "listing presentation for", "net sheet for", "should my buyer offer", "help me prepare for a listing appointment", or otherwise needs valuation analysis for a residential property. Forks on buyer vs seller. Produces self-contained branded HTML presentation: 4-tab listing presentation for sellers (Overview, CMA, Net Sheet, Marketing) or 3-tab offer strategy for buyers (Scenarios, Math, Mortgage Calculator). URAR-aligned methodology, live nationwide research per invocation, post-write feedback loop.
+description: This skill should be used when a real estate agent asks to "create a CMA", "run a CMA", "comparative market analysis", "comp this property", "what's a fair offer", "offer strategy for", "listing presentation for", "net sheet for", "should my buyer offer", or "help me prepare for a listing appointment". Forks on buyer vs seller. Produces branded self-contained HTML presentation; live research per invocation.
 version: 0.0.1
 ---
 
@@ -128,6 +128,8 @@ Load `references/cma-methodology.md` and apply the URAR-aligned Sales Comparison
 
 ### Step 6 — Build the HTML
 
+**Before generating any HTML:** Load `references/output-style-guide.md` to internalize the design discipline rules (accent is a pigment not a fill; geometric discipline; vague-by-default marketing for seller path; phase-based timeline not week-numbered). These rules govern every visual decision in the generated HTML.
+
 Load the appropriate template and substitute every `{{PLACEHOLDER}}` value. The templates are at `references/html-template-seller.html` (4-tab) and `references/html-template-buyer.html` (3-tab). Both templates document their full placeholder list in the leading HTML comment — substitute exhaustively.
 
 **Brand kit substitution (both paths):**
@@ -153,6 +155,16 @@ Load the appropriate template and substitute every `{{PLACEHOLDER}}` value. The 
 - Compute mortgage calc defaults by running `scripts/calc-mortgage.py` with the researched mortgage rate + property tax % + HO insurance estimate as inputs. Populate `{{DEFAULT_PURCHASE_PRICE}}`, `{{DEFAULT_DOWN_PAYMENT_PCT}}`, `{{DEFAULT_LOAN_TERM_YEARS}}`, `{{DEFAULT_INTEREST_RATE}}`, `{{DEFAULT_PROPERTY_TAX_PCT}}`, `{{DEFAULT_HO_INSURANCE}}`, `{{DEFAULT_OTHER_MONTHLY}}` from the result
 - Generate `{{SCENARIO_LIST_HTML}}` from the realtor's pre-flight scenario framing (e.g., "Open with X, max walk-away at Y")
 - Generate `{{SCENARIO_PRESET_CHIPS_HTML}}` so the buyer can flip between scenarios in the mortgage calc
+
+**Generating SCENARIO_PRESET_CHIPS_HTML (buyer path):** for each scenario from Step 2's pre-flight (e.g., "Recommended", "Aggressive", "Stretch"), output one `<button class="preset-chip" data-preset="<offer_amount>">Label · $<offer_amount>K</button>`. The first/recommended chip gets `class="preset-chip active"`. Example:
+
+```html
+<button class="preset-chip active" data-preset="385000">Recommended · $385K</button>
+<button class="preset-chip" data-preset="400000">Aggressive · $400K</button>
+<button class="preset-chip" data-preset="410000">Stretch · $410K</button>
+```
+
+The JS handles click-to-update-purchase-price wiring (already in the template).
 
 **Complex placeholder rendering (both paths):**
 
