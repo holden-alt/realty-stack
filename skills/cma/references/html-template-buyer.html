@@ -160,52 +160,63 @@ header.top-bar {
   padding: 4px 10px;
 }
 
-/* ============ TAB NAV ============ */
+/* ============ TAB AFFORDANCE (v0.0.4 canonical) ============ */
+
 nav.tabs {
-  background: var(--ink);
-  padding: 0 32px;
   display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 9;
-  border-bottom: 1px solid var(--ink-soft);
-  overflow-x: auto;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .tab-btn {
-  background: transparent;
-  border: none;
-  color: var(--rule);
-  font-family: var(--fd);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  padding: 14px 22px;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.tab-btn .tab-num {
+  appearance: none;
+  background: var(--bg-deep);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  color: var(--ink-soft);
   font-family: var(--fm);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  color: var(--ink-soft);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
 }
 
-.tab-btn:hover { color: var(--bg); }
-.tab-btn:hover .tab-num { color: var(--metal); }
+.tab-btn .tab-num {
+  font-size: 9px;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.tab-btn:hover {
+  background: var(--ink-soft);
+  color: var(--bg);
+  border-color: var(--ink-soft);
+}
+
+.tab-btn:hover .tab-num { opacity: 0.85; }
 
 .tab-btn.active {
+  background: var(--ink);
   color: var(--bg);
-  border-bottom-color: var(--metal);
+  border-color: var(--ink);
 }
-.tab-btn.active .tab-num { color: var(--metal); }
+
+.tab-btn.active .tab-num { color: var(--accent); opacity: 1; }
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* ============ MAIN ============ */
 main {
@@ -220,8 +231,8 @@ main {
 .tab-panel.active { display: block; }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============ PANEL HEADER ============ */
@@ -986,6 +997,8 @@ tr.subtotal td {
     scroll-behavior: smooth;
     scrollbar-width: none;
     position: relative;
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
   nav.tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
@@ -1176,11 +1189,110 @@ tr.subtotal td {
 }
 
 @media print {
-  nav.tabs, .preset-chips, .reset-btn { display: none; }
-  .tab-panel { display: block !important; page-break-before: always; }
-  .tab-panel:first-of-type { page-break-before: avoid; }
-  .comp-accordion { page-break-inside: avoid; }
-  .comp-detail { display: block !important; }
+  /* Hide interactive controls */
+  nav.tabs,
+  .preset-chips,
+  .reset-btn,
+  .mobile-nav,
+  button,
+  input,
+  select {
+    display: none !important;
+  }
+
+  /* Expand all tabs simultaneously; each major section starts on a new page */
+  .tab-panel {
+    display: block !important;
+    page-break-before: always;
+  }
+  .tab-panel:first-of-type {
+    page-break-before: avoid;
+  }
+
+  /* Expand all accordions */
+  details,
+  details > * {
+    display: block !important;
+  }
+  details summary::marker,
+  details[open] summary::after {
+    display: none;
+  }
+
+  /* Keep section cards together */
+  .card,
+  .comp-detail,
+  .comp-row,
+  .testimonial-card,
+  .section-block,
+  .panel-header {
+    page-break-inside: avoid;
+  }
+  .panel-header {
+    page-break-after: avoid;
+  }
+
+  /* Strip texture overlays */
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  /* Ink-on-white legibility — body forced white per brand discipline */
+  body {
+    background: #fff;
+    color: #000;
+    font-family: var(--fd);
+    max-width: 7.5in;
+    margin: 0 auto;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  /* Preserve brand backgrounds on cover hero + accent elements */
+  .cover-hero,
+  .accent-strip,
+  .tab-num,
+  .panel-caption {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page geometry */
+  @page {
+    margin: 0.5in;
+    size: letter;
+  }
+
+  /* Strip auto-appended URLs from links */
+  a[href]::after { content: none; }
+  a { color: var(--ink); text-decoration: none; }
+
+  /* Typography legibility */
+  h2 { font-size: 22pt; }
+  h3 { font-size: 14pt; }
+  h4 { font-size: 12pt; }
+}
+
+/* /cma buyer specific — re-display content widgets inside tab panels (override §7's broad hide) */
+@media print {
+  .tab-panel button,
+  .tab-panel input,
+  .tab-panel select {
+    display: inline-block !important;
+  }
+  /* Mortgage calc inputs are visually critical for print copies */
+  .calc-input-row input,
+  .calc-input-row select {
+    display: inline-block !important;
+  }
+  /* Custom accordions — buyer has .comp-accordion but no .pillar-accordion */
+  .comp-accordion .comp-detail {
+    display: block !important;
+  }
+  .comp-accordion {
+    page-break-inside: avoid;
+  }
 }
 </style>
 </head>
@@ -1198,10 +1310,10 @@ tr.subtotal td {
   </div>
 </header>
 
-<nav class="tabs">
-  <button class="tab-btn active" data-tab="scenarios"><span class="tab-num">01</span> Scenarios</button>
-  <button class="tab-btn" data-tab="cma"><span class="tab-num">02</span> Comparables</button>
-  <button class="tab-btn" data-tab="mortgage"><span class="tab-num">03</span> Mortgage</button>
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="scenarios" role="tab" aria-selected="true"><span class="tab-num">01</span> Scenarios</button>
+  <button class="tab-btn" data-tab="cma" role="tab" aria-selected="false"><span class="tab-num">02</span> Comparables</button>
+  <button class="tab-btn" data-tab="mortgage" role="tab" aria-selected="false"><span class="tab-num">03</span> Mortgage</button>
 </nav>
 
 <main>
@@ -1494,9 +1606,12 @@ const tabPanels = document.querySelectorAll('.tab-panel');
 tabButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.tab;
-    tabButtons.forEach(b => b.classList.remove('active'));
+    tabButtons.forEach(b => {
+      const isActive = b === btn;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
     tabPanels.forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
     document.getElementById(target).classList.add('active');
     // Scroll page to top on tab switch
     window.scrollTo({ top: 0, behavior: 'smooth' });
