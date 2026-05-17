@@ -535,3 +535,193 @@ Before shipping any CMA HTML template, verify:
 - [ ] All tap targets ≥44px height
 - [ ] Viewport meta includes `viewport-fit=cover`, omits `maximum-scale`
 - [ ] `@media print` block shows all panels, hides interactive controls
+
+---
+
+## 10. Tab affordance
+
+**Problem the pattern solves.** Earlier `/cma` templates used a mono-caption tab label (`01 / OVERVIEW`) that reads as a page number, not a button. Sellers and buyers miss the tabs on first glance. The Tab affordance pattern keeps the editorial mono-caption styling while adding obvious button cues.
+
+### CSS — canonical block
+
+Paste this into every visual template's `<style>` block (replace the prior `.tab-btn` rules in `/cma` seller + buyer; new templates start with this from day 1):
+
+```css
+/* ============ TAB AFFORDANCE (v0.0.4 canonical) ============ */
+
+nav.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  appearance: none;
+  background: var(--bg-deep);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  color: var(--ink-soft);
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn .tab-num {
+  font-size: 9px;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.tab-btn:hover {
+  background: var(--ink-soft);
+  color: var(--bg);
+  border-color: var(--ink-soft);
+}
+
+.tab-btn:hover .tab-num { opacity: 0.85; }
+
+.tab-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.tab-btn.active .tab-num { color: var(--accent); opacity: 1; }
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tab-panel { display: none; animation: fadeIn 0.3s ease; }
+.tab-panel.active { display: block; }
+```
+
+### Markup — canonical pattern
+
+```html
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">
+    <span class="tab-num">01</span> Overview
+  </button>
+  <button class="tab-btn" data-tab="cma" role="tab" aria-selected="false">
+    <span class="tab-num">02</span> Comparables
+  </button>
+  <!-- additional tabs follow same shape -->
+</nav>
+```
+
+### Mobile fallback
+
+On viewports below 600px, retain the existing native `<select>` substitute. The Tab affordance pattern targets desktop / tablet; mobile keeps the `<select>` for thumb-friendliness. Don't try to scroll the desktop tab buttons horizontally on mobile — the `<select>` is more reliable.
+
+### Design intent
+
+- **Pigment discipline:** the accent color colors the `.tab-num` of the active tab only — single decorative element, no fill. Consistent with §2.
+- **Active state contrast:** active tab inverts ink/bg for unambiguous selection. The brass on the tab number is the only accent pigment in the tab row.
+- **Editorial preserved:** mono caption, uppercase, letter-spaced — keeps the brand voice; just adds a button shell so users know it's clickable.
+
+---
+
+## 11. Print compatibility
+
+**Problem the pattern solves.** Realtors print their presentations to leave with sellers, and Cmd+P → Save as PDF is the path for emailed copies. Without explicit `@media print` rules, output has hidden tabs (only the active one prints), orphan content, visible interactive controls, and broken page breaks.
+
+### CSS — canonical block
+
+Paste this into every visual template's `<style>` block (replace the prior `@media print` block in `/cma` seller + buyer; new templates start with this from day 1):
+
+```css
+/* ============ PRINT COMPATIBILITY (v0.0.4 canonical) ============ */
+
+@media print {
+  /* Hide interactive controls */
+  nav.tabs,
+  .preset-chips,
+  .reset-btn,
+  button,
+  input,
+  select {
+    display: none !important;
+  }
+
+  /* Expand all tabs simultaneously */
+  .tab-panel {
+    display: block !important;
+    page-break-before: always;
+  }
+  .tab-panel:first-of-type {
+    page-break-before: avoid;
+  }
+
+  /* Keep section cards together */
+  .card,
+  .comp-detail,
+  .testimonial-card,
+  .section-block {
+    page-break-inside: avoid;
+  }
+
+  /* Preserve background colors where critical to design */
+  .cover-hero,
+  .accent-strip,
+  .tab-num,
+  .panel-caption {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Letter sizing — 0.5in margins via @page, body width clamp as fallback */
+  body {
+    font-family: var(--fd);
+    max-width: 7.5in;
+    margin: 0 auto;
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  @page {
+    margin: 0.5in;
+    size: letter;
+  }
+
+  /* Strip auto-appended URLs from links */
+  a[href]::after { content: none; }
+  a { color: var(--ink); text-decoration: none; }
+
+  /* Typography legibility — bump body slightly for print */
+  body { font-size: 11pt; line-height: 1.45; }
+  h2 { font-size: 22pt; }
+  h3 { font-size: 14pt; }
+  h4 { font-size: 12pt; }
+}
+```
+
+### Verification protocol
+
+After applying this block to any template:
+
+1. Open the generated HTML in Chrome.
+2. Cmd+P → Destination: Save as PDF → preview pane.
+3. Confirm: all tabs expand (every tab-panel content visible across pages), interactive controls hidden, each major tab section starts on a new page, cover hero retains background color, no auto-appended `(http://...)` after links.
+4. Compare with Safari Cmd+P preview — confirm parity.
+
+### Why these rules
+
+- `display: none !important` for nav/buttons/inputs — printed copy is read, not interacted with.
+- `page-break-before: always` on `.tab-panel` (except first) — each major section gets its own page; readers don't lose context across tabs.
+- `page-break-inside: avoid` on cards — keeps an adjustment grid or testimonial intact instead of splitting mid-card.
+- `-webkit-print-color-adjust: exact` — without this, Chrome strips background colors on print; the cover hero and accent strip go ghostly.
+- `a[href]::after { content: none; }` — Chrome's default appends `(https://...)` to every link in print; this would clutter prose with URLs.
+- `@page` size + margins — Letter with 0.5in margins matches what realtors expect when printing US-format material.
