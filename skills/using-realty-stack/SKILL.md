@@ -16,8 +16,11 @@ This skill is the orchestrator and session-start overlay for Realty Stack. When 
 4. **Load the realtor's voice profile** from `~/.config/realty-stack/voice-profile.md` if it exists. Inject the contents into context so every Realty Stack drafting skill can match the agent's voice without re-asking for samples.
    - **If the file is missing:** Print a one-line acknowledgment: "(No voice profile loaded — Realty Stack drafting skills will trigger onboarding inline.)" Then proceed without blocking. The SessionStart hook should have already prompted for onboarding; if the realtor declined, respect that. Any drafting skill invoked later will run voice-draft onboarding inline before completing the original request.
    - **If the file is corrupted** (not parseable as Markdown with expected sections — Agent Profile, Email Voice, Text Voice): print a friendly note ("Your voice profile looks corrupted — re-running onboarding") and invoke voice-draft.
-5. Announces which skills are available in this version + their trigger phrases
-6. Confirms loaded with: `✓ Realty Stack loaded (v<version>)`
+5. **Load the realtor's brand kit** from `~/.config/realty-stack/brand-kit.md` if it exists. Inject the contents into context so every Realty Stack visual-output skill (like /cma) can produce branded output without re-asking for colors/fonts/wordmark.
+   - **If the file is missing:** Print a one-line acknowledgment: "(No brand kit loaded — visual-output skills will trigger brand-kit-capture inline.)" Then proceed without blocking. Any visual-output skill invoked later will run brand-kit-capture onboarding inline before completing the original request.
+   - **If the file is corrupted** (not parseable as Markdown with expected sections — Wordmark, Colors, Typography): print a friendly note ("Your brand kit looks corrupted — re-running onboarding") and invoke brand-kit-capture.
+6. Announces which skills are available in this version + their trigger phrases
+7. Confirms loaded with: `✓ Realty Stack loaded (v<version>)`
 
 After this skill loads, the assistant should:
 - Treat every output produced inside this session as Realty-Stack-governed
@@ -69,6 +72,7 @@ Every contact-facing output checked against:
 - Realty Stack constitution (`knowledge/constitution.md`)
 - Fair Housing Act + state extensions (`knowledge/fair-housing.md`)
 - The realtor's captured voice profile (`~/.config/realty-stack/voice-profile.md` — loaded if present; if absent, onboarding triggers)
+- The realtor's captured brand kit (`~/.config/realty-stack/brand-kit.md` — loaded if present; if absent, visual-output skills trigger onboarding)
 - NAR Code of Ethics (future: `knowledge/nar-code-of-ethics.md`)
 - RESPA basics (future: `knowledge/respa-basics.md`)
 - TCPA windows (future: `knowledge/tcpa-windows.md`)
