@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<!--
+REALTY STACK BUYER TEMPLATE — PLACEHOLDER REFERENCE
+Skill substitutes the following at generation time. All double-curly-brace
+patterns are simple string replace targets.
+
+Brand kit (from brand-kit.md):
+  {{BG_COLOR}}, {{BG_DEEP_COLOR}}, {{INK_COLOR}}, {{INK_SOFT_COLOR}},
+  {{RULE_COLOR}}, {{ACCENT_COLOR}}, {{ACCENT_SOFT_COLOR}}, {{RED_COLOR}}, {{GREEN_COLOR}}
+  {{GOOGLE_FONTS_LINK}}, {{DISPLAY_FONT}}, {{MONO_FONT}}
+  {{WORDMARK_LEFT}}, {{WORDMARK_SEPARATOR}}, {{WORDMARK_RIGHT}}
+
+Property (per invocation):
+  {{SUBJECT_ADDRESS}}, {{SUBJECT_CITY_STATE}}, {{PILL_LABEL}},
+  {{PRESENTATION_DATE}}
+
+Tab 1 — Scenarios:
+  Hero stats: {{RECOMMENDED_OFFER}}, {{WALK_AWAY_MAX}}, {{MONTHLY_PAYMENT_ESTIMATE}},
+              {{CASH_TO_CLOSE_ESTIMATE}}
+  Narrative: {{LEAD_PARAGRAPH_1}}, {{LEAD_PARAGRAPH_2}}
+  Negotiation: {{NEGOTIATION_READ}}, {{SCENARIO_LIST_HTML}}, {{OFFER_STRATEGY_CLOSE}}
+
+Tab 2 — CMA:
+  Subject grid: {{SUBJECT_BUILT}}, {{SUBJECT_GLA}}, {{SUBJECT_BEDS_BATHS}},
+                {{SUBJECT_LOT}}, {{SUBJECT_CONSTRUCTION}}, {{SUBJECT_GARAGE}},
+                {{SUBJECT_HVAC}}, {{SUBJECT_WATER_SEWER}}, {{SUBJECT_OUTBUILDINGS}},
+                {{SUBJECT_POOL}}, {{SUBJECT_SCHOOL}}, {{SUBJECT_KITCHEN}},
+                {{SUBJECT_HISTORY}}
+  {{MARKET_CONDITIONS_PARA}}, {{COMP_LIST_HTML}}, {{RECONCILIATION_TABLE_ROWS}},
+  {{WEIGHTING_RATIONALE}}, {{CAVEATS_BLOCK}}
+
+Tab 3 — Mortgage Calculator (defaults):
+  {{DEFAULT_PURCHASE_PRICE}}, {{DEFAULT_DOWN_PAYMENT_PCT}}, {{DEFAULT_LOAN_TERM_YEARS}},
+  {{DEFAULT_INTEREST_RATE}}, {{DEFAULT_PROPERTY_TAX_PCT}}, {{DEFAULT_HO_INSURANCE}},
+  {{DEFAULT_OTHER_MONTHLY}}, {{SCENARIO_PRESET_CHIPS_HTML}}
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{{SUBJECT_ADDRESS}} — Offer Strategy · {{WORDMARK_LEFT}}{{WORDMARK_SEPARATOR}}{{WORDMARK_RIGHT}}</title>
+{{GOOGLE_FONTS_LINK}}
+<style>
+:root {
+  --bg: {{BG_COLOR}};
+  --bg-deep: {{BG_DEEP_COLOR}};
+  --ink: {{INK_COLOR}};
+  --ink-soft: {{INK_SOFT_COLOR}};
+  --rule: {{RULE_COLOR}};
+  --accent: {{ACCENT_COLOR}};
+  --accent-soft: {{ACCENT_SOFT_COLOR}};
+  --metal: {{ACCENT_COLOR}};
+  --red: {{RED_COLOR}};
+  --green: {{GREEN_COLOR}};
+  --fd: '{{DISPLAY_FONT}}', system-ui, sans-serif;
+  --fm: '{{MONO_FONT}}', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--fd);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mono {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fd);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+h2 { font-size: clamp(28px, 2.5vw, 36px); letter-spacing: -0.025em; }
+h3 { font-size: 18px; letter-spacing: -0.01em; }
+h4 { font-size: 15px; }
+
+p { color: var(--ink-soft); margin-bottom: 12px; max-width: 70ch; }
+p.lead { font-size: 16px; color: var(--ink); max-width: 80ch; }
+strong { color: var(--ink); font-weight: 600; }
+
+/* ============ TOP BAR ============ */
+header.top-bar {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--ink-soft);
+  position: relative;
+  z-index: 10;
+}
+
+.brand-block {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.wordmark {
+  font-family: var(--fd);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: var(--bg);
+  line-height: 1;
+}
+
+.wordmark .slash {
+  color: var(--metal);
+}
+
+.brand-divider {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.property-context {
+  font-family: var(--fd);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--rule);
+  letter-spacing: -0.005em;
+}
+
+.header-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.header-meta .mono {
+  color: var(--rule);
+}
+
+.header-meta .pill {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  border: 1px solid var(--metal);
+  padding: 4px 10px;
+}
+
+/* ============ TAB NAV ============ */
+nav.tabs {
+  background: var(--ink);
+  padding: 0 32px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  border-bottom: 1px solid var(--ink-soft);
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--rule);
+  font-family: var(--fd);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  padding: 14px 22px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tab-btn .tab-num {
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+.tab-btn:hover { color: var(--bg); }
+.tab-btn:hover .tab-num { color: var(--metal); }
+
+.tab-btn.active {
+  color: var(--bg);
+  border-bottom-color: var(--metal);
+}
+.tab-btn.active .tab-num { color: var(--metal); }
+
+/* ============ MAIN ============ */
+main {
+  flex: 1;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.tab-panel { display: none; animation: fadeIn 0.3s ease; }
+.tab-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ PANEL HEADER ============ */
+.panel-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.panel-caption {
+  margin-bottom: 12px;
+}
+
+.panel-header h2 {
+  margin-bottom: 8px;
+}
+
+.panel-subtitle {
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 70ch;
+}
+
+/* ============ OVERVIEW STATS ============ */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+
+.hero-stat {
+  padding: 24px 22px;
+  border-right: 1px solid var(--rule);
+  background: var(--bg);
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.hero-stat .value {
+  font-family: var(--fd);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.hero-stat .value-sub {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.hero-stat.primary {
+  background: var(--ink);
+  color: var(--bg);
+}
+.hero-stat.primary .label { color: var(--metal); }
+.hero-stat.primary .value { color: var(--bg); }
+.hero-stat.primary .value-sub { color: var(--rule); }
+
+/* ============ INK CALLOUT (Negotiation read, etc.) ============ */
+.callout-ink {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 28px 32px;
+  margin: 28px 0;
+  border-left: 3px solid var(--metal);
+}
+
+.callout-ink .mono {
+  color: var(--metal);
+  margin-bottom: 12px;
+}
+
+.callout-ink p {
+  color: var(--bg);
+  font-size: 16px;
+  max-width: none;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.callout-ink p em {
+  color: var(--metal);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* ============ TWO COLUMN ============ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.info-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 24px;
+}
+
+.info-card h4 {
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.info-card p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============ SUBJECT GRID ============ */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--rule);
+  margin: 16px 0 28px;
+}
+
+.subject-item {
+  padding: 12px 16px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.subject-item:nth-child(4n) { border-right: none; }
+.subject-item:nth-last-child(-n+4) { border-bottom: none; }
+
+.subject-item .label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.subject-item .value {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ============ COMP ACCORDION ============ */
+.comp-accordion {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.comp-accordion:hover { border-color: var(--ink); }
+
+.comp-summary {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto auto;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  background: var(--bg);
+  transition: all 0.15s;
+}
+
+.comp-summary:hover { background: var(--bg-deep); }
+
+.comp-accordion.open { border-color: var(--ink); }
+.comp-accordion.open .comp-summary {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.comp-id-mini {
+  font-family: var(--fm);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--metal);
+  text-transform: uppercase;
+}
+
+.comp-addr-mini {
+  font-family: var(--fd);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.comp-accordion.open .comp-addr-mini { color: var(--bg); }
+
+.comp-meta-mini {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+
+.comp-accordion.open .comp-meta-mini { color: var(--rule); }
+
+.comp-stat-mini { text-align: center; min-width: 88px; }
+
+.comp-stat-mini .label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.comp-accordion.open .comp-stat-mini .label { color: var(--metal); }
+
+.comp-stat-mini .value {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.comp-stat-mini.adjusted .value {
+  font-family: var(--fd);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.comp-accordion.open .comp-stat-mini .value,
+.comp-accordion.open .comp-stat-mini.adjusted .value { color: var(--bg); }
+
+.comp-chevron {
+  width: 20px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--fm);
+  font-size: 12px;
+  transition: transform 0.25s;
+}
+
+.comp-accordion.open .comp-chevron {
+  color: var(--metal);
+  transform: rotate(180deg);
+}
+
+.comp-detail {
+  display: none;
+  padding: 20px;
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+}
+
+.comp-accordion.open .comp-detail { display: block; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  font-family: var(--fm);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--ink);
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+tr:last-child td { border-bottom: none; }
+
+td.num, th.num {
+  text-align: right;
+  font-family: var(--fm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+tr.total td {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 500;
+  border-top: 1px solid var(--ink);
+  font-size: 13px;
+}
+tr.total td.num { color: var(--metal); }
+
+tr.subtotal td {
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.adj-positive { color: var(--green); font-weight: 500; }
+.adj-negative { color: var(--red); font-weight: 500; }
+
+/* ============ RECONCILIATION ============ */
+.recon-note {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 22px 24px;
+  margin: 20px 0;
+}
+
+.recon-note h4 {
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.recon-note p {
+  font-size: 14px;
+  margin: 0;
+  max-width: none;
+}
+
+/* ============ PULLQUOTE ============ */
+.pullquote {
+  font-family: var(--fd);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 16px 0 16px 24px;
+  border-left: 2px solid var(--metal);
+  margin: 24px 0;
+  max-width: 78ch;
+  letter-spacing: -0.01em;
+}
+
+/* ============ CAVEAT ============ */
+.caveat-box {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--red);
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.caveat-box .caveat-label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* ============ SECTION DIVIDER ============ */
+.section-divider {
+  display: flex;
+  align-items: center;
+  margin: 36px 0 24px;
+  color: var(--metal);
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.section-divider .mark {
+  margin: 0 16px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ink-soft);
+}
+
+/* ============ MORTGAGE CALCULATOR ============ */
+.preset-chips {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.preset-chips .mono {
+  margin-right: 6px;
+}
+
+.preset-chip {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-family: var(--fd);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: -0.005em;
+}
+
+.preset-chip:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.preset-chip.active {
+  background: var(--ink);
+  color: var(--metal);
+  border-color: var(--ink);
+}
+
+.calc-wrap {
+  border: 1px solid var(--rule);
+}
+
+.calc-hero {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 26px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  border-bottom: 1px solid var(--ink);
+}
+
+.calc-hero .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  margin-bottom: 10px;
+}
+
+.price-input-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.currency-prefix {
+  font-family: var(--fd);
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--metal);
+  margin-right: 6px;
+  letter-spacing: -0.04em;
+}
+
+.calc-hero input#purchasePrice {
+  font-family: var(--fd);
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--bg);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ink-soft);
+  width: 280px;
+  padding: 2px 0 4px 0;
+  letter-spacing: -0.035em;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.calc-hero input#purchasePrice:focus {
+  border-bottom-color: var(--metal);
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1px solid var(--metal);
+  color: var(--metal);
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.reset-btn:hover {
+  background: var(--metal);
+  color: var(--ink);
+}
+
+.calc-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.calc-inputs {
+  padding: 24px 28px;
+  background: var(--bg-deep);
+  border-right: 1px solid var(--rule);
+}
+
+.calc-inputs h4,
+.calc-breakdown h4 {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+.calc-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.calc-input-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+.calc-input-row label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  display: block;
+}
+
+.calc-input-row .hint {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-prefix, .input-suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--fm);
+  font-size: 12px;
+  color: var(--ink-soft);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+.input-prefix { left: 10px; }
+.input-suffix { right: 10px; }
+
+.calc-input-row input[type="number"] {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 9px 24px 9px 22px;
+  width: 130px;
+  text-align: right;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.calc-input-row input[type="number"]:focus {
+  border-color: var(--ink);
+}
+
+.calc-input-row input[type="number"]::-webkit-outer-spin-button,
+.calc-input-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.calc-input-row input[type="number"] { -moz-appearance: textfield; }
+
+.calc-breakdown {
+  padding: 24px 28px;
+  background: var(--bg);
+}
+
+.calc-line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.calc-line:last-of-type { border-bottom: 1px solid var(--ink); }
+
+.calc-line .item {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.calc-line .calc-detail {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 3px;
+  display: block;
+}
+
+.calc-line .amount {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.calc-line.deduct .amount::before {
+  content: '+';
+  margin-right: 3px;
+  color: var(--ink-soft);
+}
+
+.calc-total {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 12px 0 0;
+  align-items: baseline;
+}
+
+.calc-total .item {
+  font-family: var(--fd);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.calc-total .amount {
+  font-family: var(--fm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.calc-result {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  border-top: 2px solid var(--metal);
+}
+
+.calc-result .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  margin-bottom: 6px;
+}
+
+.calc-result .sublabel {
+  font-size: 13px;
+  color: var(--rule);
+}
+
+.calc-result .net-amount {
+  font-family: var(--fd);
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--bg);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.calc-result .cost-pct {
+  font-family: var(--fm);
+  font-size: 11px;
+  color: var(--metal);
+  margin-top: 8px;
+  text-align: right;
+  letter-spacing: 0.1em;
+}
+
+/* ============ TABLE SCROLL WRAPPER ============ */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============ RESPONSIVE ============ */
+
+/* Tablet — 1024px and below */
+@media (max-width: 1024px) {
+  main { padding: 32px 24px 64px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stat:nth-child(2) { border-right: none; }
+  .hero-stat:nth-child(1), .hero-stat:nth-child(2) { border-bottom: 1px solid var(--rule); }
+  .subject-grid { grid-template-columns: repeat(3, 1fr); }
+  .calc-body { grid-template-columns: 1fr; }
+  .calc-inputs { border-right: none; border-bottom: 1px solid var(--rule); }
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* Mobile — 768px and below */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+
+  /* TOP BAR — stack and tighten */
+  header.top-bar {
+    padding: 10px 14px;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .brand-block { gap: 10px; flex-wrap: wrap; }
+  .wordmark { font-size: 18px; }
+  .brand-divider { display: none; }
+  .property-context { font-size: 11px; width: 100%; }
+  .header-meta { gap: 8px; }
+  .header-meta .pill { font-size: 9px; padding: 3px 7px; letter-spacing: 0.14em; }
+  .header-meta .mono { font-size: 9px; }
+
+  /* TABS — smooth horizontal scroll w/ edge fade */
+  nav.tabs {
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    position: relative;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 13px 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+    min-height: 44px; /* tap target */
+  }
+  .tab-btn .tab-num { font-size: 9px; }
+  /* Right edge fade hint that there's more to scroll */
+  nav.tabs::after {
+    content: '';
+    position: sticky;
+    right: 0;
+    flex-shrink: 0;
+    width: 24px;
+    background: linear-gradient(to right, transparent, var(--ink));
+    pointer-events: none;
+    margin-left: -24px;
+  }
+
+  /* MAIN padding */
+  main { padding: 24px 16px 48px; }
+
+  /* PANEL HEADER */
+  .panel-header { margin-bottom: 28px; padding-bottom: 18px; }
+  .panel-header h2 { font-size: 24px; }
+  .panel-subtitle { font-size: 13px; }
+  .panel-caption { font-size: 10px; }
+
+  /* HERO STATS */
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-stat { padding: 16px 14px; }
+  .hero-stat .value { font-size: 20px; }
+  .hero-stat .label { font-size: 9px; margin-bottom: 8px; }
+  .hero-stat .value-sub { font-size: 11px; }
+
+  /* CALLOUT */
+  .callout-ink { padding: 20px 22px; margin: 22px 0; }
+  .callout-ink p { font-size: 14px; }
+
+  /* SUBJECT GRID */
+  .subject-grid { grid-template-columns: 1fr 1fr; }
+  .subject-item { padding: 10px 12px; }
+  .subject-item:nth-child(4n) { border-right: 1px solid var(--rule); }
+  .subject-item:nth-child(2n) { border-right: none; }
+  .subject-item:nth-last-child(-n+4) { border-bottom: 1px solid var(--rule); }
+  .subject-item:nth-last-child(-n+2) { border-bottom: none; }
+  .subject-item .label { font-size: 8px; }
+  .subject-item .value { font-size: 12px; }
+
+  /* COMP ACCORDION — 2-row grid layout on mobile */
+  .comp-accordion { margin-bottom: 8px; }
+  .comp-summary {
+    display: grid;
+    grid-template-columns: 32px 1fr 22px;
+    grid-template-rows: auto auto;
+    gap: 8px 10px;
+    padding: 14px 14px;
+    align-items: center;
+  }
+  .comp-summary > *:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .comp-summary > *:nth-child(2) { grid-column: 2; grid-row: 1; min-width: 0; }
+  .comp-summary > *:nth-child(5) { grid-column: 3; grid-row: 1; text-align: center; }
+  .comp-summary > .comp-stat-mini {
+    grid-row: 2;
+    text-align: left;
+    display: block !important;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule-soft);
+    min-width: 0;
+  }
+  .comp-summary > *:nth-child(3) { grid-column: 1 / 3; }
+  .comp-summary > *:nth-child(4) {
+    grid-column: 3 / 4;
+    text-align: right;
+    padding-left: 8px;
+  }
+  .comp-accordion.open .comp-summary > .comp-stat-mini { border-top-color: var(--ink-soft); }
+  .comp-stat-mini { min-width: 0; text-align: left; }
+  .comp-stat-mini.adjusted-comp { display: block !important; }
+  .comp-stat-mini .label { font-size: 8px; }
+  .comp-stat-mini .value { font-size: 12px; }
+  .comp-stat-mini.adjusted .value { font-size: 14px; }
+  .comp-id-mini { font-size: 12px; }
+  .comp-addr-mini { font-size: 13px; }
+  .comp-meta-mini { font-size: 11px; line-height: 1.4; }
+
+  /* COMP DETAIL & all internal tables — horizontal scroll */
+  .comp-detail { padding: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .comp-detail table { font-size: 11px; min-width: 360px; }
+  .comp-detail th, .comp-detail td { padding: 6px 8px; }
+  .comp-detail td.num, .comp-detail th.num { font-size: 11px; }
+
+  /* PULLQUOTE */
+  .pullquote { font-size: 14px; padding: 12px 0 12px 16px; }
+
+  /* CAVEAT */
+  .caveat-box { padding: 14px 16px; font-size: 12px; }
+
+  /* RECON NOTE */
+  .recon-note { padding: 16px 18px; }
+  .recon-note p { font-size: 12.5px; }
+
+  /* TABLES — horizontal scroll where needed */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll table { min-width: 600px; font-size: 11px; }
+  .table-scroll th, .table-scroll td { padding: 7px 8px; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 24px 0 16px; }
+  .section-divider .mark { font-size: 9px; margin: 0 10px; }
+
+  /* TWO COL */
+  .two-col { grid-template-columns: 1fr; gap: 14px; }
+  .info-card { padding: 16px 18px; }
+  .info-card p { font-size: 13px; }
+
+  /* PRESET CHIPS */
+  .preset-chips { gap: 5px; margin-bottom: 16px; }
+  .preset-chips .mono { width: 100%; margin: 0 0 4px 0; }
+  .preset-chip { padding: 7px 11px; font-size: 11px; }
+
+  /* CALC HERO — stack, shrink input */
+  .calc-hero {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 20px;
+  }
+  .calc-hero .label { font-size: 9px; margin-bottom: 8px; }
+  .price-input-wrap { width: 100%; }
+  .currency-prefix { font-size: 28px; }
+  .calc-hero input#purchasePrice {
+    font-size: 32px;
+    width: calc(100% - 30px);
+    padding-right: 0;
+  }
+  .reset-btn { width: 100%; padding: 12px; font-size: 10px; }
+
+  /* CALC BODY */
+  .calc-inputs, .calc-breakdown { padding: 18px 20px; }
+  .calc-inputs h4, .calc-breakdown h4 { font-size: 9px; margin-bottom: 14px; }
+  .calc-input-row { gap: 10px; margin-bottom: 12px; padding-bottom: 12px; }
+  .calc-input-row label { font-size: 12.5px; }
+  .calc-input-row .hint { font-size: 8.5px; }
+  .calc-input-row input[type="number"] { width: 115px; padding: 8px 22px 8px 20px; font-size: 12px; }
+  .input-prefix, .input-suffix { font-size: 11px; }
+
+  /* CALC BREAKDOWN */
+  .calc-line { gap: 12px; padding: 7px 0; }
+  .calc-line .item { font-size: 12px; }
+  .calc-line .calc-detail { font-size: 8.5px; }
+  .calc-line .amount { font-size: 12px; }
+  .calc-total .item { font-size: 13px; }
+  .calc-total .amount { font-size: 13px; }
+
+  /* CALC RESULT */
+  .calc-result {
+    grid-template-columns: 1fr;
+    padding: 22px 20px;
+    gap: 6px;
+  }
+  .calc-result > div:nth-child(2) {
+    border-top: 1px solid var(--ink-soft);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+  .calc-result .label { font-size: 9px; }
+  .calc-result .sublabel { font-size: 11px; }
+  .calc-result .net-amount { font-size: 38px; line-height: 1; }
+  .calc-result .cost-pct { font-size: 10px; text-align: left; margin-top: 4px; }
+}
+
+/* Very small phones — iPhone SE 1st gen, etc */
+@media (max-width: 380px) {
+  main { padding: 20px 12px 40px; }
+  .panel-header h2 { font-size: 20px; }
+  .hero-stat .value { font-size: 17px; }
+  .calc-hero input#purchasePrice { font-size: 28px; }
+  .calc-result .net-amount { font-size: 32px; }
+  .calc-input-row input[type="number"] { width: 100px; }
+  .preset-chip { padding: 6px 9px; font-size: 10px; }
+  .comp-summary { grid-template-columns: 28px 1fr 20px; gap: 6px 8px; padding: 12px; }
+  .subject-grid { grid-template-columns: 1fr; }
+  .subject-item { border-right: none !important; }
+  .subject-item:not(:last-child) { border-bottom: 1px solid var(--rule); }
+  .subject-item:last-child { border-bottom: none; }
+}
+
+@media print {
+  nav.tabs, .preset-chips, .reset-btn { display: none; }
+  .tab-panel { display: block !important; page-break-before: always; }
+  .tab-panel:first-of-type { page-break-before: avoid; }
+  .comp-accordion { page-break-inside: avoid; }
+  .comp-detail { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="brand-block">
+    <div class="wordmark">{{WORDMARK_LEFT}}<span class="slash">{{WORDMARK_SEPARATOR}}</span>{{WORDMARK_RIGHT}}</div>
+    <span class="brand-divider">·</span>
+    <span class="property-context">{{SUBJECT_ADDRESS}} · {{SUBJECT_CITY_STATE}}</span>
+  </div>
+  <div class="header-meta">
+    <span class="pill">{{PILL_LABEL}}</span>
+    <span class="mono">{{PRESENTATION_DATE}}</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="scenarios"><span class="tab-num">01</span> Scenarios</button>
+  <button class="tab-btn" data-tab="cma"><span class="tab-num">02</span> Comparables</button>
+  <button class="tab-btn" data-tab="mortgage"><span class="tab-num">03</span> Mortgage</button>
+</nav>
+
+<main>
+
+<!-- ============ TAB 1 SCENARIOS ============ -->
+<section class="tab-panel active" id="scenarios">
+  <div class="panel-header">
+    <div class="mono panel-caption">01 / OFFER STRATEGY</div>
+    <h2>Offer strategy</h2>
+    <div class="panel-subtitle">Recommended offer · supporting math · negotiation read</div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="label">Recommended Offer</div>
+      <div class="value">{{RECOMMENDED_OFFER}}</div>
+      <div class="value-sub">Knob-calibrated to your market situation</div>
+    </div>
+    <div class="hero-stat primary">
+      <div class="label">Walk-Away Max</div>
+      <div class="value">{{WALK_AWAY_MAX}}</div>
+      <div class="value-sub">Above this — you're overpaying</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Monthly Payment (PITI+MI)</div>
+      <div class="value">{{MONTHLY_PAYMENT_ESTIMATE}}</div>
+      <div class="value-sub">At recommended offer · 30yr · current rate</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Cash to Close</div>
+      <div class="value">{{CASH_TO_CLOSE_ESTIMATE}}</div>
+      <div class="value-sub">Down payment + est. closing costs</div>
+    </div>
+  </div>
+
+  <p class="lead">
+    {{LEAD_PARAGRAPH_1}}
+  </p>
+
+  <p>
+    {{LEAD_PARAGRAPH_2}}
+  </p>
+
+  <div class="callout-ink">
+    <div class="mono">NEGOTIATION READ</div>
+    <p>
+      {{NEGOTIATION_READ}}
+    </p>
+  </div>
+
+  <div class="mono" style="margin: 24px 0 12px;">OFFER SCENARIOS</div>
+  {{SCENARIO_LIST_HTML}}
+
+  <div class="pullquote">
+    {{OFFER_STRATEGY_CLOSE}}
+  </div>
+</section>
+
+<!-- ============ TAB 2 MARKET ANALYSIS ============ -->
+<section class="tab-panel" id="cma">
+  <div class="panel-header">
+    <div class="mono panel-caption">02 / MARKET ANALYSIS</div>
+    <h2>Comparative market analysis</h2>
+    <div class="panel-subtitle">URAR-aligned sales comparison · Five comparables · Line-item adjustments</div>
+  </div>
+
+  <h3 style="margin-bottom: 6px;">Subject property</h3>
+
+  <div class="subject-grid">
+    <div class="subject-item"><div class="label">Built</div><div class="value">{{SUBJECT_BUILT}}</div></div>
+    <div class="subject-item"><div class="label">GLA</div><div class="value">{{SUBJECT_GLA}}</div></div>
+    <div class="subject-item"><div class="label">Beds / Baths</div><div class="value">{{SUBJECT_BEDS_BATHS}}</div></div>
+    <div class="subject-item"><div class="label">Lot</div><div class="value">{{SUBJECT_LOT}}</div></div>
+    <div class="subject-item"><div class="label">Construction</div><div class="value">{{SUBJECT_CONSTRUCTION}}</div></div>
+    <div class="subject-item"><div class="label">Garage</div><div class="value">{{SUBJECT_GARAGE}}</div></div>
+    <div class="subject-item"><div class="label">HVAC</div><div class="value">{{SUBJECT_HVAC}}</div></div>
+    <div class="subject-item"><div class="label">Water / Sewer</div><div class="value">{{SUBJECT_WATER_SEWER}}</div></div>
+    <div class="subject-item"><div class="label">Outbuildings</div><div class="value">{{SUBJECT_OUTBUILDINGS}}</div></div>
+    <div class="subject-item"><div class="label">Pool</div><div class="value">{{SUBJECT_POOL}}</div></div>
+    <div class="subject-item"><div class="label">School</div><div class="value">{{SUBJECT_SCHOOL}}</div></div>
+    <div class="subject-item"><div class="label">Kitchen</div><div class="value">{{SUBJECT_KITCHEN}}</div></div>
+    <div class="subject-item"><div class="label">Prior Listing</div><div class="value">{{SUBJECT_HISTORY}}</div></div>
+  </div>
+
+  <p>
+    {{MARKET_CONDITIONS_PARA}}
+  </p>
+
+  <h3 style="margin: 28px 0 6px;">The comparables</h3>
+  <div class="mono" style="margin-bottom: 14px;">CLICK ANY COMP TO EXPAND ADJUSTMENTS</div>
+
+  {{COMP_LIST_HTML}}
+
+  <div class="section-divider"><span class="mark">RECONCILIATION</span></div>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Comp</th>
+        <th class="num">Sold</th>
+        <th class="num">Adjusted</th>
+        <th class="num">Net %</th>
+        <th class="num">$/sqft</th>
+        <th class="num">Weight</th>
+        <th class="num">Contribution</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{RECONCILIATION_TABLE_ROWS}}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="recon-note">
+    <h4>Weighting rationale</h4>
+    <p>
+      {{WEIGHTING_RATIONALE}}
+    </p>
+  </div>
+
+  <div class="caveat-box">
+    <div class="caveat-label">Important Disclosures</div>
+    {{CAVEATS_BLOCK}}
+  </div>
+</section>
+
+<!-- ============ TAB 3 MORTGAGE CALCULATOR ============ -->
+<section class="tab-panel" id="mortgage">
+  <div class="panel-header">
+    <div class="mono panel-caption">03 / MORTGAGE · INTERACTIVE</div>
+    <h2>Buyer mortgage calculator</h2>
+    <div class="panel-subtitle">Live monthly payment estimate · Edit any input to recalculate</div>
+  </div>
+
+  <div class="preset-chips">
+    <span class="mono">QUICK PRESETS</span>
+    {{SCENARIO_PRESET_CHIPS_HTML}}
+  </div>
+
+  <div class="calc-wrap">
+    <div class="calc-hero">
+      <div>
+        <div class="label">Purchase Price</div>
+        <div class="price-input-wrap">
+          <span class="currency-prefix">$</span>
+          <input type="number" id="purchasePrice" value="{{DEFAULT_PURCHASE_PRICE}}" step="100">
+        </div>
+      </div>
+      <button class="reset-btn" id="resetBtn">Reset Defaults</button>
+    </div>
+
+    <div class="calc-body">
+      <div class="calc-inputs">
+        <h4>Adjustable Inputs</h4>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="downPaymentPct">Down Payment</label>
+            <div class="hint">Percentage of purchase price</div>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="downPaymentPct" value="{{DEFAULT_DOWN_PAYMENT_PCT}}" step="0.5" min="0" max="100">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="loanTermYears">Loan Term</label>
+            <div class="hint">Years</div>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="loanTermYears" value="{{DEFAULT_LOAN_TERM_YEARS}}" step="5" min="10" max="40">
+            <span class="input-suffix">yr</span>
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="interestRate">Interest Rate</label>
+            <div class="hint">Annual, researched · editable</div>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="interestRate" value="{{DEFAULT_INTEREST_RATE}}" step="0.125">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="propertyTaxPct">Property Tax</label>
+            <div class="hint">Annual, % of purchase price</div>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="propertyTaxPct" value="{{DEFAULT_PROPERTY_TAX_PCT}}" step="0.05">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="hoInsurance">HO Insurance</label>
+            <div class="hint">Annual estimate</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="hoInsurance" value="{{DEFAULT_HO_INSURANCE}}" step="50">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="otherMonthly">Other Monthly</label>
+            <div class="hint">HOA, special assessments, etc.</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="otherMonthly" value="{{DEFAULT_OTHER_MONTHLY}}" step="25">
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-breakdown">
+        <h4>Monthly Breakdown</h4>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Principal &amp; Interest</span>
+            <span class="calc-detail" id="piDetail">Loan amount × monthly factor</span>
+          </div>
+          <div class="amount" id="piAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Property Tax</span>
+            <span class="calc-detail">Annual / 12</span>
+          </div>
+          <div class="amount" id="taxAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">HO Insurance</span>
+            <span class="calc-detail">Annual / 12</span>
+          </div>
+          <div class="amount" id="insAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct" id="mipLine" style="display:none;">
+          <div>
+            <span class="item">Mortgage Insurance (PMI/MIP)</span>
+            <span class="calc-detail">Required when LTV &gt; 80%</span>
+          </div>
+          <div class="amount" id="mipAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct" id="otherLine" style="display:none;">
+          <div>
+            <span class="item">Other Monthly</span>
+            <span class="calc-detail">HOA, etc.</span>
+          </div>
+          <div class="amount" id="otherAmt">$0</div>
+        </div>
+
+        <div class="calc-total">
+          <div class="item">Total Monthly Payment</div>
+          <div class="amount" id="totalMonthly">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-result">
+      <div>
+        <div class="label">Estimated Cash to Close</div>
+        <div class="sublabel">Down payment + ~3% closing costs estimate</div>
+      </div>
+      <div>
+        <div class="net-amount" id="cashToClose">$0</div>
+        <div class="cost-pct" id="downPctDisplay">DOWN · 20%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ============ TABS ============
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabPanels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    // Scroll page to top on tab switch
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll active tab into view within the tab bar (mobile)
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  });
+});
+
+// ============ ACCORDIONS ============
+document.querySelectorAll('.comp-accordion .comp-summary').forEach(summary => {
+  summary.addEventListener('click', () => {
+    const accordion = summary.closest('.comp-accordion');
+    accordion.classList.toggle('open');
+  });
+});
+
+// ============ MORTGAGE CALC ============
+const fmt = (n) => '$' + Math.round(n).toLocaleString();
+
+function calcPI(loanAmount, annualRate, termYears) {
+  if (loanAmount <= 0) return 0;
+  const monthlyRate = (annualRate / 100) / 12;
+  const n = termYears * 12;
+  if (monthlyRate === 0) return loanAmount / n;
+  const factor = Math.pow(1 + monthlyRate, n);
+  return loanAmount * (monthlyRate * factor) / (factor - 1);
+}
+
+const inputs = {
+  purchasePrice: document.getElementById('purchasePrice'),
+  downPaymentPct: document.getElementById('downPaymentPct'),
+  loanTermYears: document.getElementById('loanTermYears'),
+  interestRate: document.getElementById('interestRate'),
+  propertyTaxPct: document.getElementById('propertyTaxPct'),
+  hoInsurance: document.getElementById('hoInsurance'),
+  otherMonthly: document.getElementById('otherMonthly'),
+};
+
+const ANNUAL_MIP_PCT = 0.85;  // FHA-typical; researched alternative could override
+
+const defaults = {
+  purchasePrice: {{DEFAULT_PURCHASE_PRICE}},
+  downPaymentPct: {{DEFAULT_DOWN_PAYMENT_PCT}},
+  loanTermYears: {{DEFAULT_LOAN_TERM_YEARS}},
+  interestRate: {{DEFAULT_INTEREST_RATE}},
+  propertyTaxPct: {{DEFAULT_PROPERTY_TAX_PCT}},
+  hoInsurance: {{DEFAULT_HO_INSURANCE}},
+  otherMonthly: {{DEFAULT_OTHER_MONTHLY}},
+};
+
+function recalc() {
+  const price = parseFloat(inputs.purchasePrice.value) || 0;
+  const downPct = parseFloat(inputs.downPaymentPct.value) || 0;
+  const term = parseFloat(inputs.loanTermYears.value) || 30;
+  const rate = parseFloat(inputs.interestRate.value) || 0;
+  const taxPct = parseFloat(inputs.propertyTaxPct.value) || 0;
+  const ins = parseFloat(inputs.hoInsurance.value) || 0;
+  const other = parseFloat(inputs.otherMonthly.value) || 0;
+
+  const downPayment = price * (downPct / 100);
+  const loanAmount = price - downPayment;
+
+  const pi = calcPI(loanAmount, rate, term);
+  const monthlyTax = (price * (taxPct / 100)) / 12;
+  const monthlyIns = ins / 12;
+  const monthlyMip = downPct < 20 ? (loanAmount * (ANNUAL_MIP_PCT / 100)) / 12 : 0;
+
+  const totalMonthly = pi + monthlyTax + monthlyIns + monthlyMip + other;
+  const cashToClose = downPayment + (price * 0.03);
+
+  document.getElementById('piDetail').textContent = `$${fmt(loanAmount).replace('$','')} × monthly factor`;
+  document.getElementById('piAmt').textContent = fmt(pi);
+  document.getElementById('taxAmt').textContent = fmt(monthlyTax);
+  document.getElementById('insAmt').textContent = fmt(monthlyIns);
+
+  const mipLine = document.getElementById('mipLine');
+  if (monthlyMip > 0) {
+    mipLine.style.display = 'grid';
+    document.getElementById('mipAmt').textContent = fmt(monthlyMip);
+  } else {
+    mipLine.style.display = 'none';
+  }
+
+  const otherLine = document.getElementById('otherLine');
+  if (other > 0) {
+    otherLine.style.display = 'grid';
+    document.getElementById('otherAmt').textContent = fmt(other);
+  } else {
+    otherLine.style.display = 'none';
+  }
+
+  document.getElementById('totalMonthly').textContent = fmt(totalMonthly);
+  document.getElementById('cashToClose').textContent = fmt(cashToClose);
+  document.getElementById('downPctDisplay').textContent = `DOWN · ${downPct.toFixed(1)}%`;
+}
+
+Object.values(inputs).forEach(input => input.addEventListener('input', recalc));
+
+document.querySelectorAll('.preset-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    inputs.purchasePrice.value = chip.dataset.preset;
+    recalc();
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  Object.entries(defaults).forEach(([key, val]) => {
+    inputs[key].value = val;
+  });
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  const defaultChip = document.querySelector('.preset-chip[data-preset="' + defaults.purchasePrice + '"]');
+  if (defaultChip) defaultChip.classList.add('active');
+  recalc();
+});
+
+recalc();
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key >= '1' && e.key <= '3') {
+    const idx = parseInt(e.key) - 1;
+    if (tabButtons[idx]) tabButtons[idx].click();
+  }
+});
+</script>
+
+</body>
+</html>
