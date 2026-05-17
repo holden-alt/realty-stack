@@ -382,12 +382,16 @@ Load `references/html-template-listing-presentation.html`. Substitute every `{{P
 - `{{WORDMARK_LEFT}}`, `{{WORDMARK_SEPARATOR}}`, `{{WORDMARK_RIGHT}}` — three wordmark parts (CSS-styled HTML text, never image)
 
 **Asset embedding (same as `/cma`):** headshot, logo, wordmark mark — base64-embedded inline. Never reference asset files by path.
+- `{{COVER_HEADSHOT_HTML}}` — composite placeholder. Full `<img class="agent-photo" src="data:image/...;base64,...">` chunk if a headshot asset is available in the brand kit (or template `headshot_override`), otherwise empty string. Avoids a broken empty `<img>` tag if no headshot is present.
+- `{{FOOTER_LOGO_HTML}}` — composite placeholder. Full `<img class="footer-logo" src="data:image/...;base64,...">` chunk if a logo asset is available, otherwise empty string.
+
+**Composite-placeholder rationale.** For optional visual elements (headshot, logo, custom note), the template uses single composite placeholders (`{{COVER_HEADSHOT_HTML}}`, `{{FOOTER_LOGO_HTML}}`, `{{COVER_CUSTOM_NOTE_HTML}}`). The skill builds the full HTML chunk (with base64-embedded asset or actual prose) or emits empty string. This avoids broken empty `<img>` tags or empty wrapping `<p>` elements in rendered output without conditional logic in the template itself.
 
 **Per-listing personalization:**
 - `{{SELLER_NAME}}` — from Step 1
 - `{{PROPERTY_ADDRESS}}` — from Step 1
 - `{{APPOINTMENT_DATE}}` — from Step 1, formatted as "Tuesday, May 20, 2026"
-- `{{CUSTOM_NOTE}}` — from Step 1 (optional; rendered on cover hero or in About Me intro)
+- `{{COVER_CUSTOM_NOTE_HTML}}` — composite placeholder. If a custom note was provided in Step 1, the skill emits a full `<p class="custom-note">...</p>` chunk. If absent, the skill emits empty string. The template substitutes the chunk into the cover hero without needing conditional logic.
 - `{{AGENT_NAME}}`, `{{AGENT_BROKERAGE}}`, `{{AGENT_PRIMARY_MARKET}}` — from voice profile Agent Profile section
 
 **Section content from template:**
