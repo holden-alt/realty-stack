@@ -459,18 +459,37 @@ Every template must include:
 
 Every tabbed template must include a `@media print` block that:
 
-1. Makes all tab panels visible (not just the active one)
-2. Forces page breaks between major sections
+1. Hides interactive controls (tabs, buttons, inputs, mobile nav) that have no meaning on paper
+2. Makes all tab panels visible (not just the active one); each major section starts on a new page
 3. Expands all `<details>` accordions
-4. Hides interactive controls that have no meaning on paper
+4. Keeps section cards, comp rows, and panel headers together with `page-break-inside: avoid`
 5. Strips body texture and pseudo-element overlays
+6. Forces ink-on-white (`background: #fff; color: #000`) for legibility with full body typography sizing
+7. Preserves brand background colors on `.cover-hero`, `.accent-strip`, `.tab-num`, `.panel-caption` via `print-color-adjust: exact`
+8. Sets Letter page geometry (0.5in margins) via `@page`
+9. Strips auto-appended URLs from links
+10. Sets h2/h3/h4 point sizes for print legibility
 
 ```css
 @media print {
-  /* Show every panel regardless of active state */
+  /* Hide interactive controls */
+  nav.tabs,
+  .preset-chips,
+  .reset-btn,
+  .mobile-nav,
+  button,
+  input,
+  select {
+    display: none !important;
+  }
+
+  /* Expand all tabs simultaneously; each major section starts on a new page */
   .tab-panel {
     display: block !important;
-    page-break-after: always;
+    page-break-before: always;
+  }
+  .tab-panel:first-of-type {
+    page-break-before: avoid;
   }
 
   /* Expand all accordions */
@@ -478,18 +497,22 @@ Every tabbed template must include a `@media print` block that:
   details > * {
     display: block !important;
   }
-  details[open] summary::after,
-  details summary::marker {
+  details summary::marker,
+  details[open] summary::after {
     display: none;
   }
 
-  /* Hide interactive-only elements */
-  nav.tabs,
-  .mobile-nav,
-  .preset-chips,
-  .reset-btn,
-  .tab-btn {
-    display: none !important;
+  /* Keep section cards together */
+  .card,
+  .comp-detail,
+  .comp-row,
+  .testimonial-card,
+  .section-block,
+  .panel-header {
+    page-break-inside: avoid;
+  }
+  .panel-header {
+    page-break-after: avoid;
   }
 
   /* Strip texture overlays */
@@ -498,21 +521,40 @@ Every tabbed template must include a `@media print` block that:
     display: none !important;
   }
 
-  /* Ensure ink-on-white legibility */
+  /* Ink-on-white legibility — body forced white per brand discipline */
   body {
     background: #fff;
     color: #000;
+    font-family: var(--fd);
+    max-width: 7.5in;
+    margin: 0 auto;
+    font-size: 11pt;
+    line-height: 1.45;
   }
 
-  /* Prevent orphaned section headers */
-  .panel-header {
-    page-break-after: avoid;
+  /* Preserve brand backgrounds on cover hero + accent elements */
+  .cover-hero,
+  .accent-strip,
+  .tab-num,
+  .panel-caption {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  /* Keep comp rows together */
-  .comp-row {
-    page-break-inside: avoid;
+  /* Page geometry */
+  @page {
+    margin: 0.5in;
+    size: letter;
   }
+
+  /* Strip auto-appended URLs from links */
+  a[href]::after { content: none; }
+  a { color: var(--ink); text-decoration: none; }
+
+  /* Typography legibility */
+  h2 { font-size: 22pt; }
+  h3 { font-size: 14pt; }
+  h4 { font-size: 12pt; }
 }
 ```
 
@@ -520,31 +562,13 @@ Print output should be agent-shareable as a PDF without requiring any browser ex
 
 ---
 
-## Quick Reference Checklist
+## 8. Tab Affordance
 
-Before shipping any CMA HTML template, verify:
-
-- [ ] All color references use CSS custom properties (`var(--x)`), never hardcoded hex
-- [ ] `border-radius: 0` on all elements — no rounded corners
-- [ ] `--accent` appears only as: slash character, thin border, mono label, or single decorative mark
-- [ ] Wordmark rendered as HTML/CSS text with `{{WORDMARK_*}}` tokens, not an image
-- [ ] Section headers follow `mono caption → H2 → subtitle` order
-- [ ] Mobile: `nav.tabs` hidden at ≤768px, `.mobile-nav` select visible
-- [ ] Both tab controls wired to same `switchToTab()` function
-- [ ] Comp summary uses 2-row grid placement at ≤768px
-- [ ] All tap targets ≥44px height
-- [ ] Viewport meta includes `viewport-fit=cover`, omits `maximum-scale`
-- [ ] `@media print` block shows all panels, hides interactive controls
-
----
-
-## 10. Tab affordance
-
-**Problem the pattern solves.** Earlier `/cma` templates used a mono-caption tab label (`01 / OVERVIEW`) that reads as a page number, not a button. Sellers and buyers miss the tabs on first glance. The Tab affordance pattern keeps the editorial mono-caption styling while adding obvious button cues.
+**Problem the pattern solves.** Earlier `/cma` templates used a mono-caption tab label (`01 / OVERVIEW`) that reads as a page number, not a button. Sellers and buyers miss the tabs on first glance. The Tab Affordance pattern keeps the editorial mono-caption styling while adding obvious button cues — without breaking the §1 geometric discipline (no rounded corners).
 
 ### CSS — canonical block
 
-Paste this into every visual template's `<style>` block (replace the prior `.tab-btn` rules in `/cma` seller + buyer; new templates start with this from day 1):
+Paste this into every visual template's `<style>` block (replace prior `.tab-btn` rules in `/cma` seller + buyer; new templates start with this from day 1):
 
 ```css
 /* ============ TAB AFFORDANCE (v0.0.4 canonical) ============ */
@@ -562,7 +586,7 @@ nav.tabs {
   appearance: none;
   background: var(--bg-deep);
   border: 1px solid var(--rule);
-  border-radius: 6px;
+  border-radius: 0;
   color: var(--ink-soft);
   font-family: var(--fm);
   font-size: 10px;
@@ -575,6 +599,7 @@ nav.tabs {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
 }
 
 .tab-btn .tab-num {
@@ -606,6 +631,11 @@ nav.tabs {
 
 .tab-panel { display: none; animation: fadeIn 0.3s ease; }
 .tab-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 ```
 
 ### Markup — canonical pattern
@@ -624,104 +654,31 @@ nav.tabs {
 
 ### Mobile fallback
 
-On viewports below 600px, retain the existing native `<select>` substitute. The Tab affordance pattern targets desktop / tablet; mobile keeps the `<select>` for thumb-friendliness. Don't try to scroll the desktop tab buttons horizontally on mobile — the `<select>` is more reliable.
+On viewports below 768px (consistent with §6 Mobile Patterns), retain the native `<select>` substitute. The Tab Affordance pattern targets desktop / tablet; mobile keeps the `<select>` for thumb-friendliness. Don't try to scroll the desktop tab buttons horizontally on mobile.
 
 ### Design intent
 
-- **Pigment discipline:** the accent color colors the `.tab-num` of the active tab only — single decorative element, no fill. Consistent with §2.
+- **Pigment discipline preserved:** the accent color colors the `.tab-num` of the active tab only — single decorative element, no fill. Consistent with §2 Brand Discipline Rules.
+- **Geometric discipline preserved:** `border-radius: 0` matches §1 Visual Design System. Affordance comes from background + border + active-state inversion, not rounded corners.
 - **Active state contrast:** active tab inverts ink/bg for unambiguous selection. The brass on the tab number is the only accent pigment in the tab row.
 - **Editorial preserved:** mono caption, uppercase, letter-spaced — keeps the brand voice; just adds a button shell so users know it's clickable.
+- **Tap target:** `min-height: 44px` per §6 Mobile Patterns / Apple HIG.
 
 ---
 
-## 11. Print compatibility
+## Quick Reference Checklist
 
-**Problem the pattern solves.** Realtors print their presentations to leave with sellers, and Cmd+P → Save as PDF is the path for emailed copies. Without explicit `@media print` rules, output has hidden tabs (only the active one prints), orphan content, visible interactive controls, and broken page breaks.
+Before shipping any CMA HTML template, verify:
 
-### CSS — canonical block
-
-Paste this into every visual template's `<style>` block (replace the prior `@media print` block in `/cma` seller + buyer; new templates start with this from day 1):
-
-```css
-/* ============ PRINT COMPATIBILITY (v0.0.4 canonical) ============ */
-
-@media print {
-  /* Hide interactive controls */
-  nav.tabs,
-  .preset-chips,
-  .reset-btn,
-  button,
-  input,
-  select {
-    display: none !important;
-  }
-
-  /* Expand all tabs simultaneously */
-  .tab-panel {
-    display: block !important;
-    page-break-before: always;
-  }
-  .tab-panel:first-of-type {
-    page-break-before: avoid;
-  }
-
-  /* Keep section cards together */
-  .card,
-  .comp-detail,
-  .testimonial-card,
-  .section-block {
-    page-break-inside: avoid;
-  }
-
-  /* Preserve background colors where critical to design */
-  .cover-hero,
-  .accent-strip,
-  .tab-num,
-  .panel-caption {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* Letter sizing — 0.5in margins via @page, body width clamp as fallback */
-  body {
-    font-family: var(--fd);
-    max-width: 7.5in;
-    margin: 0 auto;
-    color: var(--ink);
-    background: var(--bg);
-  }
-
-  @page {
-    margin: 0.5in;
-    size: letter;
-  }
-
-  /* Strip auto-appended URLs from links */
-  a[href]::after { content: none; }
-  a { color: var(--ink); text-decoration: none; }
-
-  /* Typography legibility — bump body slightly for print */
-  body { font-size: 11pt; line-height: 1.45; }
-  h2 { font-size: 22pt; }
-  h3 { font-size: 14pt; }
-  h4 { font-size: 12pt; }
-}
-```
-
-### Verification protocol
-
-After applying this block to any template:
-
-1. Open the generated HTML in Chrome.
-2. Cmd+P → Destination: Save as PDF → preview pane.
-3. Confirm: all tabs expand (every tab-panel content visible across pages), interactive controls hidden, each major tab section starts on a new page, cover hero retains background color, no auto-appended `(http://...)` after links.
-4. Compare with Safari Cmd+P preview — confirm parity.
-
-### Why these rules
-
-- `display: none !important` for nav/buttons/inputs — printed copy is read, not interacted with.
-- `page-break-before: always` on `.tab-panel` (except first) — each major section gets its own page; readers don't lose context across tabs.
-- `page-break-inside: avoid` on cards — keeps an adjustment grid or testimonial intact instead of splitting mid-card.
-- `-webkit-print-color-adjust: exact` — without this, Chrome strips background colors on print; the cover hero and accent strip go ghostly.
-- `a[href]::after { content: none; }` — Chrome's default appends `(https://...)` to every link in print; this would clutter prose with URLs.
-- `@page` size + margins — Letter with 0.5in margins matches what realtors expect when printing US-format material.
+- [ ] All color references use CSS custom properties (`var(--x)`), never hardcoded hex
+- [ ] `border-radius: 0` on all elements — no rounded corners
+- [ ] `.tab-btn` uses §8 Tab Affordance pattern (bg-deep fill + rule border + active inversion); `border-radius: 0` preserved
+- [ ] `--accent` appears only as: slash character, thin border, mono label, or single decorative mark
+- [ ] Wordmark rendered as HTML/CSS text with `{{WORDMARK_*}}` tokens, not an image
+- [ ] Section headers follow `mono caption → H2 → subtitle` order
+- [ ] Mobile: `nav.tabs` hidden at ≤768px, `.mobile-nav` select visible
+- [ ] Both tab controls wired to same `switchToTab()` function
+- [ ] Comp summary uses 2-row grid placement at ≤768px
+- [ ] All tap targets ≥44px height
+- [ ] Viewport meta includes `viewport-fit=cover`, omits `maximum-scale`
+- [ ] `@media print` block shows all panels, hides interactive controls
