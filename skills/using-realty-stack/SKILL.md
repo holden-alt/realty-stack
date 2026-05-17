@@ -37,7 +37,7 @@ After this skill loads, the assistant should:
 
 **Coming Weeks 3-4 (Tier 2 — FUB-connected):** `/connect-fub`, `/fub-audit`, `/action-plan-builder`, `/revival-campaign-launcher`, `/past-client-tagger`, and more.
 
-Full roadmap: [github.com/holdengr/realty-stack](https://github.com/holdengr/realty-stack).
+Full roadmap: [github.com/holden-alt/realty-stack](https://github.com/holden-alt/realty-stack).
 
 ## The 6 brand voice tenets (always in effect)
 

@@ -24,7 +24,7 @@ The bar: every output sounds like you wrote it, respects your contacts, and stay
 ## 30-second install (Claude Code + Cowork)
 
 ```bash
-claude plugins install github.com/holdengr/realty-stack
+claude plugins install github.com/holden-alt/realty-stack
 ```
 
 Then in any Claude Code or Cowork session, ask Claude to "load realty stack" (or "using realty stack") and the session-start overlay loads — brand voice tenets, the constitution, and fair-housing guardrails go into context.
@@ -39,7 +39,7 @@ After that, just describe what you need: *"draft a text to Sarah about the new M
 
 Real onboarding sequence from a fresh install:
 
-**Install:** `claude plugins install github.com/holdengr/realty-stack` — done.
+**Install:** `claude plugins install github.com/holden-alt/realty-stack` — done.
 
 **First Cowork session after install:** Realty Stack auto-prompts:
 
