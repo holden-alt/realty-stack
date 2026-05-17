@@ -30,15 +30,23 @@ Ask for the agent's single-line positioning tagline, e.g., *"Holden/GR — Ambas
 
 Offer to skip: the agent can say "no tagline" to omit this field entirely. If skipped, record `(none)` in the brand kit file.
 
-### Step B — Wordmark structure (3 parts)
+### Step B — Capture the brand text
 
-Ask the agent to describe their wordmark in three parts:
+Ask the agent in plain language — they don't think in terms of "wordmark":
 
-1. **Left segment** — e.g., "Holden"
-2. **Separator** — e.g., "/" or "·" or "—" or none
-3. **Right segment** — e.g., "GR"
+> *"What text should appear at the top of your branded materials? Type it exactly as you want it to appear. Examples: 'Holden Richardson', 'Holden/GR', '616 Realty', 'Jane Smith — Real Estate', 'COLDWELL BANKER · Jane Smith'."*
 
-Wordmark renders as CSS-styled HTML text in all visual-output skill outputs — no image dependency, sharp at any resolution.
+Take the full text as input. Then check for a styled separator (any of `/` `·` `—` `–` `-` `|` `&` `+`) inside the text. If you find one:
+
+> *"I see a `[separator]` in your brand text. Want it styled in your accent color? (Like the slash in 'Holden/GR' being brass.)"*
+
+If yes: split the text into three parts — left segment, the separator, right segment — and store as `WORDMARK_LEFT`, `WORDMARK_SEPARATOR`, `WORDMARK_RIGHT` in the brand kit file.
+
+If no (or no separator found): store the full text in `WORDMARK_LEFT` and leave `WORDMARK_SEPARATOR` + `WORDMARK_RIGHT` blank. The HTML template renders the unsplit text in the display font.
+
+If the agent later uploads a logo file in Step E, the logo image takes precedence in generated HTML — the text wordmark becomes a fallback.
+
+**Don't use the word "wordmark" with the agent.** Internally we call it a wordmark; externally we call it "your brand text" or "the text at the top of your materials." Agents who have a logo file just call it "their logo." Match their mental model.
 
 ### Step C — Brand colors (8 hex values)
 
@@ -160,10 +168,11 @@ Write the file to `~/.config/realty-stack/brand-kit.md` using this exact structu
 Captured: [ISO date]
 
 ## Wordmark
-- Left segment: Holden
-- Separator: /
-- Right segment: GR
-- Render as: HTML/CSS text (no image)
+- Full brand text: Holden/GR
+- Left segment: Holden       # (only set if separator-styling was chosen)
+- Separator: /               # (only set if separator-styling was chosen)
+- Right segment: GR          # (only set if separator-styling was chosen)
+- Render as: HTML/CSS text if no logo file present; logo file (Step E) takes precedence if uploaded.
 
 ## Tagline
 Holden/GR — Ambassador To RealSavvy
@@ -215,6 +224,8 @@ When the agent provides fewer than 8 color values, derive the missing ones as fo
 | `green` | Default `#3d6b3d` if not provided |
 
 When suggesting derived values, show the hex alongside a plain-English rationale (e.g., *"bg-deep: #E8E6DF — bg darkened ~7%"*). Always surface derivations in the Step G confirmation so the agent can override before approval.
+
+- **Brand text** — if the agent types just one word or no separator (e.g., "Holden Richardson"), store as WORDMARK_LEFT only; SEPARATOR + RIGHT stay blank. HTML template renders WORDMARK_LEFT in display font.
 
 ---
 
