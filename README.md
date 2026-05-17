@@ -2,7 +2,7 @@
 
 **AI skills for residential real estate agents who actually close deals.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.2-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.3-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
 
 Open-source. MIT. Free. Built by a working realtor who codes — for working realtors who want their AI to sound like *them*, not like a marketing intern.
 
@@ -31,7 +31,7 @@ Then in any Claude Code or Cowork session, ask Claude to "load realty stack" (or
 
 After that, just describe what you need: *"draft a text to Sarah about the new Madison Ave listing"* — Claude routes to the right skill (`voice-draft` in this case) automatically. No slash-typing required.
 
-**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.2. We'll add them based on demand from real users.
+**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.3. We'll add them based on demand from real users.
 
 ---
 
@@ -61,17 +61,21 @@ Real onboarding sequence from a fresh install:
 
 **Holden:** "yes that's me" → onboarding complete, voice profile written to `~/.config/realty-stack/voice-profile.md`. **Total time: ~5 minutes.**
 
-**From this point forward**, every Realty Stack skill (follow-up-draft, listing-description, meeting-distill, etc.) produces output in Holden's voice automatically. He never pastes voice samples again.
+**Next**, brand-kit-capture runs the same way (~5 min) to capture his visual brand — colors, typography, wordmark structure, and optional logo/headshot.
+
+**From this point forward**, every Realty Stack skill (follow-up-draft, listing-description, meeting-distill, /cma, etc.) produces output in both his voice AND his brand automatically. He never pastes samples or brand details again.
 
 ---
 
-## Skills (v0.0.2)
+## Skills (v0.0.3)
 
 Skills auto-route based on what you ask Claude. You don't type slashes — you describe what you need.
 
 | Skill | Triggers on | What it does |
 |---|---|---|
+| `brand-kit-capture` (one-time, on install) | Auto-fires alongside voice-draft on first install; also "set up my brand", "add my logo", "configure my brand kit" | Captures the realtor's visual brand kit (colors, typography, wordmark, optional logo/headshot). Persists to `~/.config/realty-stack/brand-kit.md`. Required by `/cma` and every future visual-output skill. ~5 min one-time setup. |
 | `voice-draft` (one-time, on install) | Auto-fires on first session post-install; also "set up my voice", "onboard me", "configure realty stack" | Captures the realtor's email + text voice + basic profile. Persists to `~/.config/realty-stack/voice-profile.md`. Future drafting skills auto-use it. ~5 min one-time setup. |
+| `cma` | "create a CMA for...", "comp this property", "offer strategy for...", "listing presentation for...", "what's a fair offer on..." | Produces a self-contained branded HTML CMA presentation. Seller mode: 4-tab listing presentation (Overview, CMA, Net Sheet, Marketing). Buyer mode: 3-tab offer strategy (Scenarios, Math, Mortgage Calculator). URAR-aligned methodology, live nationwide research per invocation, post-write feedback loop. |
 
 More skills land daily — see [CHANGELOG.md](CHANGELOG.md) for the rolling release log.
 
@@ -82,7 +86,6 @@ More skills land daily — see [CHANGELOG.md](CHANGELOG.md) for the rolling rele
 | `follow-up-draft` | "follow up with...", "reach out to...", "touch base with..." | Specific-contact follow-ups in your voice with adaptive cadence reasoning. |
 | `meeting-distill` | "distill this meeting", "summarize this transcript", "extract action items from..." | Granola transcript → action items + key takeaways + drafted follow-up + drafted FUB note. |
 | `listing-description` | "write a listing for...", "MLS copy for...", "describe this property..." | Property details → MLS-ready listing copy. Fair-housing checked. |
-| `cma` | "run a CMA on...", "comparative market analysis", "comp this property..." | Subject + 3-5 comps → CMA narrative + price recommendation + rationale. |
 
 **Coming Weeks 3-4 (Tier 2 — connects to your FUB account via the bundled `fub-mcp-server`):**
 

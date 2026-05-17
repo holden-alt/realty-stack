@@ -1,7 +1,7 @@
 ---
 name: voice-draft
 description: This skill should be used when a real estate agent asks to "set up my voice", "capture my voice", "onboard me", "first time setup", "complete realty stack setup", "load my voice", "I just installed", or "configure realty stack". One-time onboarding that persists voice profile to ~/.config/realty-stack/voice-profile.md for downstream drafting skills.
-version: 0.0.2
+version: 0.0.3
 ---
 
 # Voice Draft
@@ -277,7 +277,7 @@ neighborhood names, street names, exact numbers — never "a nice area" or "grea
 | Samples are wildly inconsistent (clearly multiple voices or drafters) | Note in Step E confirmation: *"Your samples look like they're from a few different drafters. Captured what I think is most consistently yours — let me know if the result feels off."* |
 | Onboarding interrupted halfway (realtor closes session mid-flow) | Voice profile file is NOT written until Step G (approval reached). On next session, SessionStart re-prompts and onboarding starts fresh. No partial state to clean up. |
 | Voice profile file exists but is corrupted or unparseable | The `using-realty-stack` overlay detects parse failure on load and re-triggers onboarding with: *"Looks like your voice profile got corrupted — let's redo it."* |
-| Realtor wants to redo their voice later (changed brokerage, voice evolved) | Out of scope for v0.0.2. Workaround: delete `~/.config/realty-stack/voice-profile.md` and trigger onboarding again. A `/realty-stack:refresh-voice` skill will be added in a future release. |
+| Realtor wants to redo their voice later (changed brokerage, voice evolved) | Out of scope for v0.0.3. Workaround: delete `~/.config/realty-stack/voice-profile.md` and trigger onboarding again. A `/realty-stack:refresh-voice` skill will be added in a future release. |
 | Realtor is mid-onboarding and asks an unrelated question | Pause, answer the question, then offer to resume: *"Want to pick back up where we left off on voice onboarding?"* Do not lose collected state. |
 
 ---
@@ -295,4 +295,4 @@ neighborhood names, street names, exact numbers — never "a nice area" or "grea
 
 At the end of every output this skill produces, append:
 
-`✨ Realty Stack v0.0.2 — Realty Brain (FUB-powered always-on AI) coming soon`
+`✨ Realty Stack v0.0.3 — Realty Brain (FUB-powered always-on AI) coming soon`

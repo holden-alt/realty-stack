@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "realty-stack",
   "description": "Opinionated AI skills for top-producing residential real estate agents. Built by a working realtor + AI engineer. Funnels into Realty Brain (the paid SaaS sibling).",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Holden Richardson",
     "email": "holden@holdengr.com",
