@@ -1,170 +1,300 @@
 ---
 name: voice-draft
-description: This skill should be used when a real estate agent asks to "draft a text to", "write an email about", "compose a follow-up for", "draft a FUB note for", "in my voice write", "help me reply to", "what should I say to", or otherwise needs to draft a message to a contact (buyer, seller, lead, past client) in the agent's own voice. Takes past message samples + intent and returns a draft matched to the agent's voice patterns, checked against brand voice tenets and fair-housing language guardrails.
-version: 0.0.1
+description: This skill should be used when a real estate agent asks to "set up my voice", "capture my voice", "onboard me", "first time setup", "complete realty stack setup", "load my voice", "I just installed", or "configure realty stack" — i.e., for the one-time onboarding that captures the agent's writing voice (email + text) so all other Realty Stack drafting skills produce output in their voice. Walks the agent through profile collection, sample submission, analysis, confirmation, and refinement; persists the result to ~/.config/realty-stack/voice-profile.md.
+version: 0.0.2
 ---
 
 # Voice Draft
 
-Universal voice-cloning at the prompt level. The agent pastes 3+ past messages they actually sent + the intent for the new message; the skill returns a draft that matches their voice, respects the brand tenets, and passes fair-housing checks.
-
-This is the highest-frequency Realty Stack skill. Every other skill that produces written output for the realtor delegates voice-matching to this skill's workflow.
+One-time onboarding skill that captures the realtor's writing voice — both email and text — and persists the result to disk. From that point forward, every other Realty Stack drafting skill auto-uses the captured profile so the realtor never re-pastes samples.
 
 ---
 
-## Inputs the skill needs
+## When this skill runs
 
-**Required:**
-1. **3+ past message samples** from the realtor — texts, emails, FUB notes, whatever. The more recent and the more similar in genre to the target, the better.
-2. **Intent** — what the new message needs to do. Examples:
-   - *"Text Sarah about the new Madison Ave listing. Kitchen was her objection on the last one; this one's renovated. Don't push."*
-   - *"Email John his closing disclosure is ready. Friendly but professional."*
-   - *"FUB note for Marcus — toured 3 properties yesterday, leaning toward the Cherry St one but worried about the basement."*
+Two trigger paths:
 
-**Optional but improves quality:**
-- **Contact context** — name, relationship stage, what they care about, last touch, source
-- **Channel** — text vs email vs FUB note vs Slack vs DM (affects length + formality)
-- **Constraints** — character limit, must include X, must NOT include Y
+**Path A — SessionStart hook (primary).** On first session after install, the plugin's SessionStart hook fires, checks for `~/.config/realty-stack/voice-profile.md`, finds it missing, and injects a prompt:
 
-**If inputs are missing:**
-Don't guess. Ask the realtor exactly what's missing. Best-case is one round of clarification, not three drafts that miss the mark.
+> *"Realty Stack is loaded. Before you use any skills, let's capture your writing voice — takes about 5 minutes, one-time. Want to do it now?"*
+
+If the realtor says yes (or any natural affirmation), activate this skill immediately.
+
+If the realtor declines or says "later," respect that and answer their actual question — but note that any Realty Stack drafting skill invoked later will trigger voice-draft inline before completing their request.
+
+**Path B — First-skill-invocation fallback (belt + suspenders).** If the realtor bypasses the SessionStart prompt (dismissed, programmatic session, hook failure), the first time they invoke any Realty Stack drafting skill, that skill detects the missing voice profile and runs this onboarding flow to completion before continuing with the realtor's original request.
 
 ---
 
-## Workflow
+## Onboarding workflow
 
-### Step 1 — Load context
+Work through these steps in order. Do not skip steps or proceed without sufficient input.
 
-Always load `knowledge/voice-guide.md` before composing. Load `knowledge/fair-housing.md` if the target is contact-facing copy (any message addressed to a buyer, seller, lead, or past client).
+### Step A — Collect Agent Profile
 
-### Step 2 — Analyze the voice samples
+Collect four fields. Ask for all four in a single message to minimize back-and-forth:
 
-Identify and silently note:
+1. **Full Name** — exactly as it should appear in signatures
+2. **Brokerage** — full brokerage name
+3. **Primary Market** — city or region (anchors the "Practical & Local" voice tenet in all output)
+4. **Preferred signoff** — two variants:
+   - Email signoff (e.g., "— Holden" casual / "Holden Richardson | 616 Realty" formal)
+   - Text signoff (e.g., "— H" or none)
 
-- **Sentence length** — short and clipped, medium conversational, long and explanatory
-- **Vocabulary register** — casual ("yeah", "cool"), professional ("appreciate", "regarding"), mixed
-- **Punctuation habits** — em-dashes vs commas, exclamation use, ellipses, parenthetical asides
-- **Opener style** — "Hey Sarah," / "Sarah —" / no opener / first-name-only / "Hi there"
-- **Signoff style** — "— Holden" / "Holden | 616 Realty" / "Thanks, H" / no signoff / first-name initial
-- **Formality** — contractions or not, "you guys" vs "y'all" vs "you both"
-- **Specificity habits** — does the realtor name properties by street, by listing ID, by description?
-- **Hedge words** — does the realtor use "just," "actually," "maybe," "I think" — or skip them?
-- **Anything notable** — distinctive phrases, em-dash placement, specific signoffs they always use
+Signoff is optional if samples make it obvious — infer it from samples and confirm in Step E.
 
-### Step 3 — Compose the draft
+### Step B — Collect Email Samples
 
-Match the voice analysis. Honor the brand tenets:
+Ask the realtor to paste 3-5 substantial emails they've actually sent in a real estate context. Prompt:
 
-- Direct & clear (no filler the realtor wouldn't use)
-- Calm & confident (no manufactured urgency, no exclamation pile-ups)
-- Practical & local (specific properties, neighborhoods, numbers — never fabricate; ask if uncertain)
-- No-fluff educational (if the message teaches something, simplify it)
-- Slightly blunt but always helpful (don't soften past the realtor's own voice)
-- Respectful & mature (no viral chasing; no condescension)
+> *"Paste 3-5 real emails you've sent — not drafts, not templates, actual sent messages in a real estate context. Substantial means more than a one-liner — a few sentences each minimum. Diverse contexts help (one to a buyer lead, one to a client under contract, one to another agent, etc.) but aren't required."*
 
-The draft is a complete, copy-paste-send message. No "Draft 1:" labels. No meta-commentary. The realtor pastes this directly into their text app / email / FUB.
+**Minimum threshold:** Require at least 2 substantial samples before proceeding. If fewer than 2 are provided, push back:
 
-### Step 4 — Self-check
+> *"I need at least 2 real ones — got a couple more?"*
 
-Before returning the draft, silently check:
+Do not attempt to analyze on insufficient data.
 
-- Does it sound like the samples? (Match length, register, signoff, opener.)
-- Does it violate any voice tenet?
-- Does it manufacture urgency, scarcity, or pressure that isn't in the intent?
-- Does it use phrases flagged in `knowledge/fair-housing.md`? (If yes: revise OR surface the flag, don't ship the problem.)
-- Does it fabricate any specific fact (price, square footage, neighborhood claim) not supplied by the realtor? (If yes: revise to use only supplied facts.)
+### Step C — Collect Text Samples
 
-If a check fails, revise before returning.
+Ask for 3-5 substantial real estate texts, same rationale. Prompt:
 
-### Step 5 — Return the draft with a one-line confidence note
+> *"Same thing for texts — 3-5 real texts you've actually sent in a real estate context. Doesn't have to be long; just real. No pre-written scripts."*
 
-Format:
+**Minimum threshold:** Same as Step B — at least 2 substantial samples before proceeding. Push back with the same prompt if fewer are provided.
 
-```
-<the draft message, ready to copy>
+### Step D — Analyze Both Batches
 
-—
+Analyze the email samples and text samples independently. For each channel, build a voice profile using the file format specified in the "Voice profile file format" section below. Note:
 
-Confidence: <one-line note on how tight the voice match feels and what (if anything) is a guess>
-```
+- Sentence length (average + range)
+- Common openers and signoffs
+- Punctuation habits (em-dash, exclamation points, ellipses)
+- Vocabulary register (casual, professional, mixed)
+- Hedge word frequency ("just," "actually," "I think," "maybe")
+- Emoji usage
+- Notable phrasings — anything distinctive that the realtor consistently does
+- What the realtor does NOT do that AI tends to produce (filler, urgency, preamble)
 
-Examples of confidence notes:
-- `Confidence: tight voice match — short sentences, em-dash opener, "— H" signoff per samples.`
-- `Confidence: voice match on length and register. Signoff is a guess (samples used different ones).`
-- `Confidence: tight on voice. Flagged "perfect for families" in your supplied intent — replaced with "4 bed, fenced backyard" per fair-housing guide. Original phrase noted so you can decide.`
+Also flag during analysis (for use in Step E if applicable):
+- Template-looking samples (boilerplate, identical structure across samples)
+- Inconsistent samples (clearly multiple voices or drafters)
 
-### Step 6 — Offer to revise
+### Step E — Return Confirmation
 
-After the confidence note, one short line:
+Return all three of the following in a single response:
 
-`Want me to tighten, lengthen, change tone, or try a different angle?`
+**1. Voice summary** — two plain-English paragraphs, one for email voice and one for text voice, ~150-300 words each. Written so a downstream skill can read it and "play the role" of this agent at a keyboard. Include the observed patterns as a structured list after each paragraph.
 
-If the realtor wants a revision, take their note and produce a new draft — don't re-analyze the voice samples from scratch unless they're giving you new samples.
+**2. Example email** — one complete, copy-paste-ready email drafted on this exact scenario:
+
+> *Follow up with a hot buyer lead who toured a property 5 days ago about a new comparable listing that just hit MLS.*
+
+**3. Example text** — one complete text drafted on this exact scenario:
+
+> *Let a past client know about a listing that just dropped in the same neighborhood they bought in 18 months ago.*
+
+Close with:
+
+> *"Sound like you? Or tell me what's off."*
+
+**Flag edge cases inline if detected:**
+- Template samples → *"These look like template responses. Captured what I can, but voice quality will be better with more conversational samples — texts to a friend-of-friend lead, follow-ups after a showing, that kind of thing. Want to add a few?"*
+- Inconsistent samples → *"Your samples look like they're from a few different drafters. Captured what I think is most consistently yours — let me know if the result feels off."*
+
+### Step F — Refinement Loop
+
+Accept freeform feedback in plain English. Any complaint or correction is valid — "too stiff," "I'd never say it like that," or specific line-level edits. Prompt:
+
+> *"Tell me what's off — be as specific or as gut-feel as you want, both work."*
+
+Per round of feedback:
+1. Adjust the voice profile per the feedback
+2. Regenerate both example outputs (email + text) using the updated profile
+3. Present the updated summary and examples
+4. Ask again: *"Better? Or still needs work?"*
+
+Loop until the realtor says "yes that's me," "looks good," "ship it," or any semantic equivalent.
+
+### Step G — Write the Voice Profile File
+
+Only after the realtor approves the refinement — never before.
+
+1. Use Bash to create the directory if it does not exist:
+   ```bash
+   mkdir -p ~/.config/realty-stack/
+   ```
+
+2. Use the Write tool to write the full voice profile to `~/.config/realty-stack/voice-profile.md` using the format specified below.
+
+3. Confirm success with:
+   > *"Voice profile saved. Every Realty Stack skill will now draft in your voice automatically."*
 
 ---
 
-## Trigger phrases the overlay should auto-route here
+## Default example scenarios
 
-- "draft a text to..."
-- "write an email about..."
-- "what should I say to..."
-- "compose a follow-up for..."
-- "draft a FUB note for..."
-- "in my voice, write..."
-- "help me reply to..."
+These are the fixed scenarios used in Step E. Do not improvise alternatives.
 
----
-
-## Reference files this skill loads on demand
-
-- `knowledge/voice-guide.md` — **always** (loaded at Step 1)
-- `knowledge/fair-housing.md` — when the draft is contact-facing copy (any message addressed to a buyer, seller, lead, past client, or anyone outside the realtor's brokerage)
-- `knowledge/tcpa-windows.md` — when drafting a marketing text and timing matters (future, when this file exists)
-
----
-
-## When the realtor hasn't given enough context
-
-Common gaps + how to ask:
-
-| Missing | Ask |
+| Channel | Scenario |
 |---|---|
-| Past samples (zero or only 1-2) | "Got 3+ past messages I can use for voice? Texts, emails, FUB notes all work — just paste them in." |
-| Intent unclear | "What does this message need to do? One sentence is fine — example: 'Tell Sarah the new Madison Ave listing has the renovated kitchen she wanted.'" |
-| Contact unnamed but referenced | "Who's the recipient? (Name + one-line on relationship: 'hot lead from holdengr.com 6 weeks ago' or 'past client, closed 2024').' |
-| Channel unspecified | "Text or email? (Affects length + formality.)" |
-| Specific facts missing (prices, addresses, dates) | "Need [X specific fact] to make this concrete — what's the [thing]?" |
+| Email | *"Follow up with a hot buyer lead who toured a property 5 days ago about a new comparable listing that just hit MLS."* |
+| Text | *"Let a past client know about a listing that just dropped in the same neighborhood they bought in 18 months ago."* |
 
-Don't make up facts. Don't draft three "drafts" each guessing different things. Ask once, draft once, ship.
+---
+
+## Voice profile file format
+
+Write the file to `~/.config/realty-stack/voice-profile.md` using this exact structure:
+
+```markdown
+# Realty Stack — Voice Profile for [Agent Full Name]
+Captured: [ISO date]
+Refined: [ISO date] ([N] rounds)
+
+## Agent Profile
+- Name: [Full Name]
+- Brokerage: [Brokerage]
+- Market: [Primary Market]
+- Email signoff: "[casual signoff]" (casual) / "[formal signoff]" (formal)
+- Text signoff: "[text signoff]" or none
+
+## Email Voice
+
+[150-300 word plain-English description of how this agent writes emails.
+Tone, register, openness, sentence rhythm, what they do that's distinctive,
+what they don't do that AI tends to do. Written so a downstream skill can
+read it and "play the role" of this agent at a keyboard.]
+
+### Observed patterns
+- Sentence length: [average words, range]
+- Common openers: [examples]
+- Common signoffs: [examples]
+- Em-dash usage: [heavy / moderate / rare / none]
+- Hedge word frequency: [high / moderate / low / none]
+- Exclamation points: [heavy / moderate / rare / never]
+- Emoji: [never / only mirrors contact / occasional]
+- Notable phrasings: [anything distinctive]
+
+## Text Voice
+
+[150-300 word plain-English description, same shape as Email Voice above
+but for texts. Usually noticeably more clipped; fragments encouraged;
+less formal.]
+
+### Observed patterns
+- Sentence length: [average words]
+- Fragment use: [heavy / moderate / rare]
+- Common openers: [examples]
+- Common signoffs: [examples]
+- Em-dash usage: [heavy / moderate / rare / none]
+- Emoji: [never / only mirrors contact / occasional]
+- Notable phrasings: [anything distinctive]
+
+## Source Samples (preserved for future re-analysis)
+
+### Emails
+[Raw email samples pasted by the agent, separated by ---]
+
+### Texts
+[Raw text samples pasted by the agent, separated by ---]
+
+## Refinement History
+- Round 1 ([ISO date]): captured from [N] emails + [N] texts + profile ([Name], [Brokerage], [Market], signoffs [inferred/provided])
+- Round [N] ([ISO date]): [brief description of change]
+```
+
+**Complete example:**
+
+```markdown
+# Realty Stack — Voice Profile for Holden Richardson
+Captured: 2026-05-16
+Refined: 2026-05-16 (2 rounds)
+
+## Agent Profile
+- Name: Holden Richardson
+- Brokerage: 616 Realty
+- Market: Grand Rapids, MI
+- Email signoff: "— Holden" (casual) / "Holden Richardson | 616 Realty" (formal)
+- Text signoff: "— H" or none
+
+## Email Voice
+
+Direct and short. Opens with first name or "Hey [name]," — never "Dear" or "Hi there."
+Em-dashes do the structural work that other writers use commas for. Sentences are
+clipped; rarely more than 15 words. Calls out specific streets and neighborhood names
+(Heritage Hill, Eastown) rather than generic descriptors. Never manufactured urgency —
+no "you need to act now" language; confidence comes from specificity, not pressure.
+Formal register only when the thread calls for it (offer summaries, contract notes).
+Signoff is "— Holden" casually or the full brokerage line when formality is warranted.
+
+### Observed patterns
+- Sentence length: ~12 words average, range 5-30
+- Common openers: "Hey [name],", "[Name] —", "Quick one —"
+- Common signoffs: "— Holden", "Holden Richardson | 616 Realty" for formal threads
+- Em-dash usage: heavy
+- Hedge word frequency: low ("just" rare, "actually" rare, "I think" rare)
+- Exclamation points: rare (only genuine excitement — offer accepted, closing confirmed)
+- Emoji: never
+- Notable phrasings: prefers neighborhood names over generic; uses "we" for buyer-agent collaboration
+
+## Text Voice
+
+Very clipped. Fragments everywhere. No opener on quick replies — just the message.
+First name only on initial texts. Em-dashes show up even in two-line texts. Lowercase
+often. Mirrors the contact's emoji usage but never leads with them. Signs "— H" on
+anything more than a sentence; nothing on one-liners. Same specificity habit as email —
+neighborhood names, street names, exact numbers — never "a nice area" or "great price."
+
+### Observed patterns
+- Sentence length: ~6 words average
+- Fragment use: heavy
+- Common openers: "[First name] —" or nothing
+- Common signoffs: "— H" or none
+- Em-dash usage: heavy
+- Emoji: only mirrors contact's usage
+- Notable phrasings: skips greetings on quick replies; lowercase often; no filler
+
+## Source Samples (preserved for future re-analysis)
+
+### Emails
+[4 email samples separated by ---]
+
+### Texts
+[5 text samples separated by ---]
+
+## Refinement History
+- Round 1 (2026-05-16): captured from 4 emails + 5 texts + profile (Holden Richardson, 616 Realty, Grand Rapids MI, signoffs inferred)
+- Round 2 (2026-05-16): agent flagged "emails too stiff on opener" → relaxed default opener from "Hi [name]," to "Hey [name],"
+```
 
 ---
 
 ## Edge cases
 
-**The realtor pastes samples that violate the voice tenets** — e.g., past texts that are aggressive, salesy, or use fair-housing-flagged language. Match the realtor's actual voice but silently filter the worst of the violations and surface them in the confidence note: *"Confidence: voice match. Note — your sample texts include some manufactured urgency; I dialed that back per the no-push tenet, but say the word if you want the higher-pressure version."*
-
-**The realtor wants AI-shaped, generic copy** — they ask for "professional business email tone." Push back gently: *"The whole point of /voice-draft is yours-not-generic. Want me to draft in your voice from samples, or do you want generic? (Generic is fine for some uses — confirming the intent before I switch modes.)"*
-
-**The realtor is drafting on behalf of someone else** — e.g., they're a team lead drafting for a junior agent. Ask whose voice to match. Default to the sender's voice if samples are from the sender.
-
-**The realtor wants the message in a different language** — translate after composing in English, or if samples are in the target language, compose in that language directly. Don't apply English voice tenets word-for-word to non-English drafts; transfer the principles (direct, calm, no-fluff, etc.).
+| Situation | Behavior |
+|---|---|
+| Realtor provides fewer than 2 samples in either email or text batch | Push back: *"I need at least 2 real samples per category to capture your voice. Got a couple more?"* Do not attempt to analyze on insufficient data. |
+| Samples are all CRM-template-looking (boilerplate, identical structure) | Flag in Step E confirmation: *"These look like template responses. Captured what I can, but voice quality will be better with more conversational samples — texts to a friend-of-friend lead, follow-ups after a showing, that kind of thing. Want to add a few?"* |
+| Samples are wildly inconsistent (clearly multiple voices or drafters) | Note in Step E confirmation: *"Your samples look like they're from a few different drafters. Captured what I think is most consistently yours — let me know if the result feels off."* |
+| Onboarding interrupted halfway (realtor closes session mid-flow) | Voice profile file is NOT written until Step G (approval reached). On next session, SessionStart re-prompts and onboarding starts fresh. No partial state to clean up. |
+| Voice profile file exists but is corrupted or unparseable | The `using-realty-stack` overlay detects parse failure on load and re-triggers onboarding with: *"Looks like your voice profile got corrupted — let's redo it."* |
+| Realtor wants to redo their voice later (changed brokerage, voice evolved) | Out of scope for v0.0.2. Workaround: delete `~/.config/realty-stack/voice-profile.md` and trigger onboarding again. A `/realty-stack:refresh-voice` skill will be added in a future release. |
+| Realtor is mid-onboarding and asks an unrelated question | Pause, answer the question, then offer to resume: *"Want to pick back up where we left off on voice onboarding?"* Do not lose collected state. |
 
 ---
 
 ## What this skill never does
 
-- Auto-send any message.
-- Suggest the realtor send a message they didn't ask to send.
-- Fabricate facts about a property, a contact, market data, or past interactions.
-- Use the realtor's name to sign a message that wasn't generated by the realtor's request.
-- Add an "AI-assisted" disclosure to the message unless the realtor explicitly asks (Tenet T16).
+- Auto-send any message on the realtor's behalf
+- Persist anything to `~/.config/realty-stack/voice-profile.md` until the realtor has approved the refinement — no partial writes, ever
+- Skip Step E (confirmation + examples) before writing the file
+- Fabricate the agent's name, brokerage, or market — these must come from the agent explicitly or be confirmed from samples before being written to the profile
 
 ---
 
 ## Funnel hook
 
-At the end of every output, append:
+At the end of every output this skill produces, append:
 
-`✨ Realty Stack v0.0.1 — for continuous voice training + live FUB integration: realtybrain.com`
-
-(In Realty Brain, voice samples are persistent + learned-from-sent-messages, so this skill stops needing pasted samples every time.)
+`✨ Realty Stack v0.0.2 — Realty Brain syncs your voice across devices and learns continuously: realtybrain.com`
