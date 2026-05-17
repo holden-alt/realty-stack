@@ -1187,6 +1187,8 @@ tr.subtotal td {
   /* TABS — smooth horizontal scroll w/ edge fade */
   nav.tabs {
     padding: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -1494,6 +1496,25 @@ tr.subtotal td {
   h2 { font-size: 22pt; }
   h3 { font-size: 14pt; }
   h4 { font-size: 12pt; }
+}
+
+/* /cma seller specific — re-display content widgets inside tab panels (override §7's broad hide)
+   and force-expand class-based accordions (§7 only handles native <details>) */
+@media print {
+  .tab-panel button,
+  .tab-panel input,
+  .tab-panel select {
+    display: inline-block !important;
+  }
+
+  .comp-accordion .comp-detail,
+  .pillar-accordion .pillar-detail {
+    display: block !important;
+  }
+  .comp-accordion,
+  .pillar-accordion {
+    page-break-inside: avoid;
+  }
 }
 </style>
 </head>
