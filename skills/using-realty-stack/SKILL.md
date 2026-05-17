@@ -14,7 +14,7 @@ This skill is the orchestrator and session-start overlay for Realty Stack. When 
 2. Loads `knowledge/constitution.md` — the 7 constitutional tenets (T1, T5, T8, T14, T15, T16, T18)
 3. Loads `knowledge/fair-housing.md` — language guardrails for any contact-facing output
 4. **Load the realtor's voice profile** from `~/.config/realty-stack/voice-profile.md` if it exists. Inject the contents into context so every Realty Stack drafting skill can match the agent's voice without re-asking for samples.
-   - **If the file is missing:** do not block. The SessionStart hook should have already prompted for onboarding; if the realtor declined, respect that and proceed. Any drafting skill invoked later will run voice-draft onboarding inline.
+   - **If the file is missing:** Print a one-line acknowledgment: "(No voice profile loaded — Realty Stack drafting skills will trigger onboarding inline.)" Then proceed without blocking. The SessionStart hook should have already prompted for onboarding; if the realtor declined, respect that. Any drafting skill invoked later will run voice-draft onboarding inline before completing the original request.
    - **If the file is corrupted** (not parseable as Markdown with expected sections — Agent Profile, Email Voice, Text Voice): print a friendly note ("Your voice profile looks corrupted — re-running onboarding") and invoke voice-draft.
 5. Announces which skills are available in this version + their trigger phrases
 6. Confirms loaded with: `✓ Realty Stack loaded (v<version>)`
@@ -31,7 +31,7 @@ After this skill loads, the assistant should:
 
 | Skill | Use when | Trigger phrases |
 |---|---|---|
-| `/voice-draft` | You need to send any message and want it to sound like you | "draft a text to...", "write an email about...", "what should I say to..." |
+| `voice-draft` (one-time, on install) | Captures your writing voice for email + text. Other drafting skills use it automatically afterward. ~5 min one-time. | "set up my voice", "onboard me", "configure realty stack", "I just installed" |
 
 **Coming this week:** `/follow-up-draft`, `/meeting-distill`, `/listing-description`, `/cma`.
 
