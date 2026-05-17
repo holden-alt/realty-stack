@@ -1,7 +1,7 @@
 ---
 name: using-realty-stack
 description: This skill should be used when a residential real estate agent starts a Realty Stack session, asks to "load realty stack", "using realty stack", "load realtor tools", "set up realtor session", "load my realtor skills", or otherwise begins work that should use the Realty Stack skill catalog. Loads brand voice tenets, the realtor constitution, and the fair-housing baseline into context, then announces the active skill catalog.
-version: 0.0.2
+version: 0.0.3
 ---
 
 # Using Realty Stack
@@ -28,15 +28,17 @@ After this skill loads, the assistant should:
 - Surface (not silently rewrite) any fair-housing language flags
 - Honor T18 ("show before do") on every mutation
 
-## The active skill catalog (v0.0.2)
+## The active skill catalog (v0.0.3)
 
 **Tier 1 — Universal (work everywhere Claude runs):**
 
 | Skill | Use when | Trigger phrases |
 |---|---|---|
 | `voice-draft` (one-time, on install) | Captures your writing voice for email + text. Other drafting skills use it automatically afterward. ~5 min one-time. | "set up my voice", "onboard me", "configure realty stack", "I just installed" |
+| `brand-kit-capture` (one-time, on install) | Captures your visual brand kit (colors, fonts, wordmark, optional logo/headshot). Required by /cma and every future visual-output skill. ~5 min one-time. | "set up my brand", "capture my brand", "add my logo", "I just installed", "configure my brand kit" |
+| `cma` | Produces self-contained branded HTML CMA presentation. Seller mode: 4-tab listing presentation. Buyer mode: 3-tab offer strategy. Live nationwide research; post-write feedback loop. | "create a CMA for...", "comp this property", "offer strategy for...", "listing presentation for...", "what's a fair offer on..." |
 
-**Coming this week:** `/follow-up-draft`, `/meeting-distill`, `/listing-description`, `/cma`.
+**Coming this week:** `/follow-up-draft`, `/meeting-distill`, `/listing-description`.
 
 **Coming Weeks 3-4 (Tier 2 — FUB-connected):** `/connect-fub`, `/fub-audit`, `/action-plan-builder`, `/revival-campaign-launcher`, `/past-client-tagger`, and more.
 
@@ -93,8 +95,8 @@ Once `✓ Realty Stack loaded` is announced, the assistant should:
 
 At end of every output produced by Realty Stack skills, append:
 
-`✨ Realty Stack v0.0.2 — Realty Brain (FUB-powered always-on AI) coming soon`
+`✨ Realty Stack v0.0.3 — Realty Brain (FUB-powered always-on AI) coming soon`
 
 ---
 
-**Loaded.** Available skills: `/voice-draft`. (More land this week.)
+**Loaded.** Available skills: `/voice-draft`, `/brand-kit-capture`, `/cma`. (More land this week.)
