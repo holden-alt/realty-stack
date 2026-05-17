@@ -1,0 +1,16 @@
+{
+  "name": "realty-stack",
+  "owner": {
+    "name": "Holden Richardson",
+    "email": "holden@holdengr.com",
+    "url": "https://holdengr.com"
+  },
+  "description": "Holden Richardson's open-source residential realtor skill bundle for Claude. The canonical free toolkit for top-producing agents.",
+  "plugins": [
+    {
+      "name": "realty-stack",
+      "source": "./",
+      "description": "Opinionated AI skills for residential real estate agents. Brand voice + compliance baseline + daily-use skills (voice drafting, follow-ups, listings, CMAs)."
+    }
+  ]
+}

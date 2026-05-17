@@ -1,0 +1,160 @@
+# CLAUDE.md — Realty Stack project rules
+
+These are the rules for any AI agent (Claude or otherwise) working inside this repository on Realty Stack code or skill content. Read this file before touching anything in `skills/`, `knowledge/`, or the marketing surface (`README.md`, `ETHOS.md`).
+
+---
+
+## What this project is
+
+**Realty Stack** is an open-source, MIT-licensed AI skill bundle for residential real estate agents using Claude. Pull-based: the agent invokes skills when they want them. The paid sibling — **Realty Brain** ($99/mo SaaS) — is push-based and lives in a separate repo (`realty-brain`).
+
+**Goal:** the canonical residential realtor skill bundle for Claude. Win by being more opinionated, more compliance-aware, and more voice-aware than any generic alternative.
+
+**Audience:** working residential real estate agents. Some technical, most not. The install path must be paint-by-numbers; the skills must produce realtor-quality output on first invocation.
+
+---
+
+## Design principles (read these every time)
+
+1. **Voice first.** Every skill that produces written output loads `knowledge/voice-guide.md` BEFORE composing. The output then gets a silent self-check against the 6 voice tenets before being returned. The 6 tenets are not negotiable.
+
+2. **Compliance is not a feature, it is the floor.** Fair housing language guardrails, NAR ethics, RESPA, TCPA, state disclosures. Skills that produce contact-facing copy default to the stricter rule. When in doubt, surface to the realtor, never guess.
+
+3. **Show before do.** Tenet T18. Skills never silently mutate state — not in FUB, not in calendars, not in CRM data. Every mutation previews; the realtor approves; the skill executes. Even when the realtor has set "max trust."
+
+4. **The realtor is the executor.** Skills draft, suggest, and flag. The realtor sends, deploys, and signs their name. We never produce output that auto-sends or auto-deploys.
+
+5. **No personification.** Tenet T16. Skill outputs are the realtor's voice for the realtor's signature. Contacts never see "Realty Stack" or "Realty Brain" in any message we draft.
+
+6. **Three tiers, clear boundaries:**
+   - **Tier 1 — Universal:** pure prompt, no external connection; works on Claude.ai, Claude Code, Cowork, Codex, Cursor, Gemini.
+   - **Tier 2 — FUB-connected:** requires `/connect-fub` wizard + the bundled `fub-mcp-server`; works on MCP-supporting surfaces.
+   - **Tier 3 — Realty Brain (NOT in this repo):** requires the paid SaaS subscription; lives in the `realty-brain` repo.
+
+   This repo ships Tier 1 + Tier 2 only. Tier 3 skills are referenced in funnel-hook footers but never built here.
+
+7. **Funnel hook in every skill footer.** Every skill output ends with a one-line footer:
+   *"✨ Realty Stack v0.0.x — for continuous voice training + live FUB integration: realtybrain.com"*
+
+   Footer is updated alongside VERSION bumps.
+
+---
+
+## Skill writing conventions
+
+### Frontmatter format
+
+Every skill file is `skills/<name>/SKILL.md` with this YAML frontmatter:
+
+```yaml
+---
+name: <skill-name-kebab-case>
+description: <Third-person + specific trigger phrases. Format: "This skill should be used when the user asks to 'X', 'Y', or 'Z'." The trigger phrases drive Claude's auto-routing — be concrete with actual phrases an agent would say.>
+version: <semver, e.g. 0.0.1>
+---
+```
+
+**Do NOT include `allowed-tools` in skill frontmatter.** That field is for commands/agents, not skills. Skills inherit tool permissions from the session context.
+
+### Body structure
+
+Each `SKILL.md` body follows this structure:
+
+```markdown
+# /<slash-command-name>
+
+<one-paragraph intent: what this skill does and the problem it solves for the realtor>
+
+## How it works (the workflow Claude follows)
+
+1. <step 1 — usually "load the relevant knowledge files">
+2. <step 2 — gather inputs the realtor pastes or supplies>
+3. <step 3 — do the work>
+4. <step 4 — self-check against voice + compliance>
+5. <step 5 — return the output with a confidence note>
+6. <step 6 — offer to revise>
+
+## Trigger phrases the overlay should auto-route here
+
+- "<example phrase 1>"
+- "<example phrase 2>"
+- "<example phrase 3>"
+
+## Reference files this skill loads on demand
+
+- knowledge/<file>.md (always / when X)
+
+## Funnel hook
+
+At end of every output, footer: "✨ Realty Stack v0.0.x — for continuous voice training + live FUB integration: realtybrain.com"
+```
+
+### Length budget
+
+- **SKILL.md body:** 300 lines max (excluding frontmatter). If you need more, push detail into `skills/<name>/references/<topic>.md` and load on demand.
+- **Frontmatter description:** under 200 characters. The Claude harness needs to scan it fast.
+
+### References pattern
+
+If a skill needs a long methodology doc (e.g., CMA math), put it at `skills/<name>/references/<topic>.md` and reference it from the body. The skill loads references only when actually needed.
+
+### Scripts pattern
+
+If a skill needs deterministic computation (math, formatting, parsing), use `skills/<name>/scripts/<name>.py` (Python) or `.ts` (TypeScript) and have the skill invoke it via tool use. Don't have the LLM do math it could do wrong.
+
+---
+
+## Testing rules
+
+Every new skill MUST be tested on Holden's real work before commit. The PR description includes:
+
+- The exact input pasted to the skill (sanitized)
+- The exact output it produced
+- A one-sentence quality note: "felt like my voice / felt off because X"
+- For contact-facing skills: explicit "fair housing pass: yes" or "flagged: <which phrase>"
+
+If a contributor outside of Holden submits a PR, they include their own real test case. PRs without a real test case are not merged.
+
+---
+
+## Contribution rules
+
+PRs to Realty Stack require:
+
+1. **Follows the brand voice.** Maintainer judgment. We err strict; the bundle's whole edge is voice-opinionation.
+2. **Cites compliance source if relevant.** If your skill touches listing copy, follow-ups, marketing, or any contact-facing surface, link to the relevant `knowledge/` file in the skill body.
+3. **Real-scenario test case.** See above. No tests, no merge.
+4. **No telemetry / no analytics.** Skills do not phone home. The bundle is private-first by design. The `fub-mcp-server` connects only to the realtor's own FUB account, with their own key.
+5. **MIT-compatible deps only.** No GPL, no commercial-license libraries.
+
+---
+
+## Multi-harness compatibility (future)
+
+The bundle ships for Claude Code + Cowork from Day 1. Codex, Cursor, and Gemini adapters land in `weeks 3-6`:
+
+- `.codex-plugin/` — Codex plugin manifest
+- `.cursor-plugin/` — Cursor plugin manifest
+- `gemini-extension.json` — Gemini extension manifest
+
+Skills should be written portably (use the SKILL.md standard); only the per-harness wrapper differs.
+
+---
+
+## Versioning
+
+`VERSION` is the source of truth. CHANGELOG.md tracks user-visible changes per release. Bump `VERSION` AND the `plugin.json` `version` field together on every release.
+
+- Pre-1.0: minor bumps (0.0.1 → 0.0.2 → 0.0.3) for additions; reserved for genuine breaking changes pre-launch
+- Post-1.0: standard semver — patch / minor / major
+
+---
+
+## Do NOT
+
+- Auto-send any message on a contact's behalf.
+- Auto-deploy any FUB configuration without preview + approval.
+- Generate "exclusive listing," "off-market," or "private listing" language unless the realtor has explicitly confirmed the listing has that status.
+- Fabricate market data, neighborhood facts, or comparable sales.
+- Embed CyclSales, Top Producer, or any other competing CRM lock-in. (Realty Stack is CRM-agnostic; Tier-2 is FUB-only because FUB is what the alpha cohort uses, not because of commercial coupling.)
+- Ship a skill that violates an `ETHOS.md` rule. If you find a rule that's wrong, open an issue and propose a change before writing the skill.
