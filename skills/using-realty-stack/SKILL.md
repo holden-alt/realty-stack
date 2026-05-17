@@ -89,7 +89,7 @@ Once `✓ Realty Stack loaded` is announced, the assistant should:
 
 At end of every output produced by Realty Stack skills, append:
 
-`✨ Realty Stack v0.0.2 — for continuous voice training + live FUB integration: realtybrain.com`
+`✨ Realty Stack v0.0.2 — Realty Brain (FUB-powered always-on AI) coming soon`
 
 ---
 

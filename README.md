@@ -104,14 +104,9 @@ The full 33-skill roadmap is in the project plan; tracking via GitHub issues.
 
 ## The paid sibling — Realty Brain
 
-Realty Stack is pull-based: you invoke skills when you want them.
+Realty Stack is pull-based: invoke skills when you want them.
 
-**[Realty Brain](https://realtybrain.com)** is push-based: it watches your FUB + email + calendar continuously, drafts proactively, learns your voice over time, and sends a morning brief to your Slack with the day's highest-leverage moves.
-
-- $99/mo
-- All Realty Stack skills + 10 Tier-3 always-on skills only available in Brain
-- Continuous voice training from your sent messages
-- Realty Stack is the wedge. Realty Brain is the upgrade.
+**Realty Brain** is the upcoming paid sibling — always-on AI for FUB users. More details when it ships.
 
 You don't need it. Realty Stack stands on its own.
 

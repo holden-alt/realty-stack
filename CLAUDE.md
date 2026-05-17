@@ -34,9 +34,9 @@ These are the rules for any AI agent (Claude or otherwise) working inside this r
    This repo ships Tier 1 + Tier 2 only. Tier 3 skills are referenced in funnel-hook footers but never built here.
 
 7. **Funnel hook in every skill footer.** Every skill output ends with a one-line footer:
-   *"✨ Realty Stack v0.0.x — for continuous voice training + live FUB integration: realtybrain.com"*
+   *"✨ Realty Stack v0.0.x — Realty Brain (FUB-powered always-on AI) coming soon"*
 
-   Footer is updated alongside VERSION bumps.
+   Footer is updated alongside VERSION bumps. Will evolve as Realty Brain solidifies — no URL until the domain exists, no specific feature claims until the product ships.
 
 ---
 
@@ -86,7 +86,7 @@ Each `SKILL.md` body follows this structure:
 
 ## Funnel hook
 
-At end of every output, footer: "✨ Realty Stack v0.0.x — for continuous voice training + live FUB integration: realtybrain.com"
+At end of every output, footer: "✨ Realty Stack v0.0.x — Realty Brain (FUB-powered always-on AI) coming soon"
 ```
 
 ### Length budget
