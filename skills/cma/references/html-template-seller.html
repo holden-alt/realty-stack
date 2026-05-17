@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<!--
+REALTY STACK SELLER TEMPLATE — PLACEHOLDER REFERENCE
+Skill substitutes the following at generation time. All double-curly-brace
+patterns are simple string replace targets.
+
+Brand kit (from brand-kit.md):
+  {{BG_COLOR}}, {{BG_DEEP_COLOR}}, {{INK_COLOR}}, {{INK_SOFT_COLOR}},
+  {{RULE_COLOR}}, {{ACCENT_COLOR}}, {{RED_COLOR}}, {{GREEN_COLOR}}
+  {{GOOGLE_FONTS_LINK}}, {{DISPLAY_FONT}}, {{MONO_FONT}}
+  {{WORDMARK_LEFT}}, {{WORDMARK_SEPARATOR}}, {{WORDMARK_RIGHT}}
+
+Property (per invocation):
+  {{SUBJECT_ADDRESS}}, {{SUBJECT_CITY_STATE}}, {{PILL_LABEL}},
+  {{PRESENTATION_DATE}}
+
+Tab 1 — Overview:
+  {{INDICATED_VALUE_RANGE}}, {{RECOMMENDED_LIST}}, {{PROBABLE_SALE_RANGE}},
+  {{NET_TO_SELLER}}, {{LEAD_PARAGRAPH_1}}, {{LEAD_PARAGRAPH_2}},
+  {{STRATEGIC_TAKEAWAY}}, {{INFO_CARD_LEFT}}, {{INFO_CARD_RIGHT}},
+  {{CLOSING_PULLQUOTE}}
+
+Tab 2 — CMA:
+  Subject grid: {{SUBJECT_BUILT}}, {{SUBJECT_GLA}}, {{SUBJECT_BEDS_BATHS}},
+                {{SUBJECT_LOT}}, {{SUBJECT_CONSTRUCTION}}, {{SUBJECT_GARAGE}},
+                {{SUBJECT_HVAC}}, {{SUBJECT_WATER_SEWER}}, {{SUBJECT_OUTBUILDINGS}},
+                {{SUBJECT_POOL}}, {{SUBJECT_SCHOOL}}, {{SUBJECT_KITCHEN}},
+                {{SUBJECT_HISTORY}}
+  {{MARKET_CONDITIONS_PARA}}, {{COMP_LIST_HTML}}, {{RECONCILIATION_TABLE_ROWS}},
+  {{WEIGHTING_RATIONALE}}, {{CAVEATS_BLOCK}}
+
+Tab 3 — Net Sheet (defaults):
+  {{DEFAULT_COMMISSION_PCT}}, {{DEFAULT_ADMIN_FEE}}, {{DEFAULT_TITLE_FEE}},
+  {{DEFAULT_TAX_PRORATION}}, {{DEFAULT_WELL_SEPTIC}}, {{DEFAULT_MORTGAGE_PAYOFF}},
+  {{DEFAULT_BUYER_CONCESSIONS}}, {{DEFAULT_SALE_PRICE}}, {{PRESET_CHIPS_HTML}},
+  {{STATE_NAME}}, {{STATE_TAX_RATE_PER_500}}, {{COUNTY_NAME}}, {{COUNTY_TAX_RATE_PER_500}},
+  {{TITLE_INSURANCE_FUNCTION_BODY}}, {{NET_SHEET_FOOTER_CITATIONS}}
+
+Tab 4 — Marketing:
+  {{MARKETING_LEAD_PARAGRAPH}}, {{MARKETING_PILLARS_HTML}},
+  {{TIMELINE_PHASES_HTML}}, {{MARKETING_CLOSING_PULLQUOTE}}
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{{SUBJECT_ADDRESS}} — Listing Presentation · {{WORDMARK_LEFT}}{{WORDMARK_SEPARATOR}}{{WORDMARK_RIGHT}}</title>
+{{GOOGLE_FONTS_LINK}}
+<style>
+:root {
+  --bg: {{BG_COLOR}};
+  --bg-deep: {{BG_DEEP_COLOR}};
+  --ink: {{INK_COLOR}};
+  --ink-soft: {{INK_SOFT_COLOR}};
+  --rule: {{RULE_COLOR}};
+  --accent: {{ACCENT_COLOR}};
+  --accent-soft: #4E5B6B;
+  --metal: {{ACCENT_COLOR}};
+  --red: {{RED_COLOR}};
+  --green: {{GREEN_COLOR}};
+  --fd: '{{DISPLAY_FONT}}', system-ui, sans-serif;
+  --fm: '{{MONO_FONT}}', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--fd);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mono {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fd);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+h2 { font-size: clamp(28px, 2.5vw, 36px); letter-spacing: -0.025em; }
+h3 { font-size: 18px; letter-spacing: -0.01em; }
+h4 { font-size: 15px; }
+
+p { color: var(--ink-soft); margin-bottom: 12px; max-width: 70ch; }
+p.lead { font-size: 16px; color: var(--ink); max-width: 80ch; }
+strong { color: var(--ink); font-weight: 600; }
+
+/* ============ TOP BAR ============ */
+header.top-bar {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--ink-soft);
+  position: relative;
+  z-index: 10;
+}
+
+.brand-block {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.wordmark {
+  font-family: var(--fd);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: var(--bg);
+  line-height: 1;
+}
+
+.wordmark .slash {
+  color: var(--metal);
+}
+
+.brand-divider {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.property-context {
+  font-family: var(--fd);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--rule);
+  letter-spacing: -0.005em;
+}
+
+.header-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.header-meta .mono {
+  color: var(--rule);
+}
+
+.header-meta .pill {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  border: 1px solid var(--metal);
+  padding: 4px 10px;
+}
+
+/* ============ TAB NAV ============ */
+nav.tabs {
+  background: var(--ink);
+  padding: 0 32px;
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  border-bottom: 1px solid var(--ink-soft);
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--rule);
+  font-family: var(--fd);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  padding: 14px 22px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tab-btn .tab-num {
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+.tab-btn:hover { color: var(--bg); }
+.tab-btn:hover .tab-num { color: var(--metal); }
+
+.tab-btn.active {
+  color: var(--bg);
+  border-bottom-color: var(--metal);
+}
+.tab-btn.active .tab-num { color: var(--metal); }
+
+/* ============ MAIN ============ */
+main {
+  flex: 1;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.tab-panel { display: none; animation: fadeIn 0.3s ease; }
+.tab-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ PANEL HEADER ============ */
+.panel-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.panel-caption {
+  margin-bottom: 12px;
+}
+
+.panel-header h2 {
+  margin-bottom: 8px;
+}
+
+.panel-subtitle {
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 70ch;
+}
+
+/* ============ OVERVIEW STATS ============ */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+
+.hero-stat {
+  padding: 24px 22px;
+  border-right: 1px solid var(--rule);
+  background: var(--bg);
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.hero-stat .value {
+  font-family: var(--fd);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.hero-stat .value-sub {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.hero-stat.primary {
+  background: var(--ink);
+  color: var(--bg);
+}
+.hero-stat.primary .label { color: var(--metal); }
+.hero-stat.primary .value { color: var(--bg); }
+.hero-stat.primary .value-sub { color: var(--rule); }
+
+/* ============ INK CALLOUT (Strategic takeaway, etc.) ============ */
+.callout-ink {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 28px 32px;
+  margin: 28px 0;
+  border-left: 3px solid var(--metal);
+}
+
+.callout-ink .mono {
+  color: var(--metal);
+  margin-bottom: 12px;
+}
+
+.callout-ink p {
+  color: var(--bg);
+  font-size: 16px;
+  max-width: none;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.callout-ink p em {
+  color: var(--metal);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* ============ TWO COLUMN ============ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.info-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 24px;
+}
+
+.info-card h4 {
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.info-card p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============ SUBJECT GRID ============ */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--rule);
+  margin: 16px 0 28px;
+}
+
+.subject-item {
+  padding: 12px 16px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.subject-item:nth-child(4n) { border-right: none; }
+.subject-item:nth-last-child(-n+4) { border-bottom: none; }
+
+.subject-item .label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.subject-item .value {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ============ COMP ACCORDION ============ */
+.comp-accordion {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.comp-accordion:hover { border-color: var(--ink); }
+
+.comp-summary {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto auto;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  background: var(--bg);
+  transition: all 0.15s;
+}
+
+.comp-summary:hover { background: var(--bg-deep); }
+
+.comp-accordion.open { border-color: var(--ink); }
+.comp-accordion.open .comp-summary {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.comp-id-mini {
+  font-family: var(--fm);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--metal);
+  text-transform: uppercase;
+}
+
+.comp-addr-mini {
+  font-family: var(--fd);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.comp-accordion.open .comp-addr-mini { color: var(--bg); }
+
+.comp-meta-mini {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+
+.comp-accordion.open .comp-meta-mini { color: var(--rule); }
+
+.comp-stat-mini { text-align: center; min-width: 88px; }
+
+.comp-stat-mini .label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.comp-accordion.open .comp-stat-mini .label { color: var(--metal); }
+
+.comp-stat-mini .value {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.comp-stat-mini.adjusted .value {
+  font-family: var(--fd);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.comp-accordion.open .comp-stat-mini .value,
+.comp-accordion.open .comp-stat-mini.adjusted .value { color: var(--bg); }
+
+.comp-chevron {
+  width: 20px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--fm);
+  font-size: 12px;
+  transition: transform 0.25s;
+}
+
+.comp-accordion.open .comp-chevron {
+  color: var(--metal);
+  transform: rotate(180deg);
+}
+
+.comp-detail {
+  display: none;
+  padding: 20px;
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+}
+
+.comp-accordion.open .comp-detail { display: block; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  font-family: var(--fm);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--ink);
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+tr:last-child td { border-bottom: none; }
+
+td.num, th.num {
+  text-align: right;
+  font-family: var(--fm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+tr.total td {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 500;
+  border-top: 1px solid var(--ink);
+  font-size: 13px;
+}
+tr.total td.num { color: var(--metal); }
+
+tr.subtotal td {
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.adj-positive { color: var(--green); font-weight: 500; }
+.adj-negative { color: var(--red); font-weight: 500; }
+
+/* ============ RECONCILIATION ============ */
+.recon-note {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 22px 24px;
+  margin: 20px 0;
+}
+
+.recon-note h4 {
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.recon-note p {
+  font-size: 14px;
+  margin: 0;
+  max-width: none;
+}
+
+/* ============ PULLQUOTE ============ */
+.pullquote {
+  font-family: var(--fd);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 16px 0 16px 24px;
+  border-left: 2px solid var(--metal);
+  margin: 24px 0;
+  max-width: 78ch;
+  letter-spacing: -0.01em;
+}
+
+/* ============ CAVEAT ============ */
+.caveat-box {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--red);
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.caveat-box .caveat-label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* ============ SECTION DIVIDER ============ */
+.section-divider {
+  display: flex;
+  align-items: center;
+  margin: 36px 0 24px;
+  color: var(--metal);
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.section-divider .mark {
+  margin: 0 16px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ink-soft);
+}
+
+/* ============ NET SHEET CALCULATOR ============ */
+.preset-chips {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.preset-chips .mono {
+  margin-right: 6px;
+}
+
+.preset-chip {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-family: var(--fd);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: -0.005em;
+}
+
+.preset-chip:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.preset-chip.active {
+  background: var(--ink);
+  color: var(--metal);
+  border-color: var(--ink);
+}
+
+.calc-wrap {
+  border: 1px solid var(--rule);
+}
+
+.calc-hero {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 26px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  border-bottom: 1px solid var(--ink);
+}
+
+.calc-hero .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  margin-bottom: 10px;
+}
+
+.price-input-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.currency-prefix {
+  font-family: var(--fd);
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--metal);
+  margin-right: 6px;
+  letter-spacing: -0.04em;
+}
+
+.calc-hero input#salePrice {
+  font-family: var(--fd);
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--bg);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ink-soft);
+  width: 280px;
+  padding: 2px 0 4px 0;
+  letter-spacing: -0.035em;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.calc-hero input#salePrice:focus {
+  border-bottom-color: var(--metal);
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1px solid var(--metal);
+  color: var(--metal);
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.reset-btn:hover {
+  background: var(--metal);
+  color: var(--ink);
+}
+
+.calc-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.calc-inputs {
+  padding: 24px 28px;
+  background: var(--bg-deep);
+  border-right: 1px solid var(--rule);
+}
+
+.calc-inputs h4,
+.calc-breakdown h4 {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+.calc-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.calc-input-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+.calc-input-row label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  display: block;
+}
+
+.calc-input-row .hint {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-prefix, .input-suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--fm);
+  font-size: 12px;
+  color: var(--ink-soft);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+.input-prefix { left: 10px; }
+.input-suffix { right: 10px; }
+
+.calc-input-row input[type="number"] {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  padding: 9px 24px 9px 22px;
+  width: 130px;
+  text-align: right;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.calc-input-row input[type="number"]:focus {
+  border-color: var(--ink);
+}
+
+.calc-input-row input[type="number"]::-webkit-outer-spin-button,
+.calc-input-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.calc-input-row input[type="number"] { -moz-appearance: textfield; }
+
+.calc-breakdown {
+  padding: 24px 28px;
+  background: var(--bg);
+}
+
+.calc-line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.calc-line:last-of-type { border-bottom: 1px solid var(--ink); }
+
+.calc-line .item {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.calc-line .calc-detail {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 3px;
+  display: block;
+}
+
+.calc-line .amount {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.calc-line.deduct .amount::before {
+  content: '−';
+  margin-right: 3px;
+  color: var(--ink-soft);
+}
+
+.calc-total {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 12px 0 0;
+  align-items: baseline;
+}
+
+.calc-total .item {
+  font-family: var(--fd);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.calc-total .amount {
+  font-family: var(--fm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.calc-result {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  border-top: 2px solid var(--metal);
+}
+
+.calc-result .label {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  margin-bottom: 6px;
+}
+
+.calc-result .sublabel {
+  font-size: 13px;
+  color: var(--rule);
+}
+
+.calc-result .net-amount {
+  font-family: var(--fd);
+  font-size: 44px;
+  font-weight: 600;
+  color: var(--bg);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.calc-result .cost-pct {
+  font-family: var(--fm);
+  font-size: 11px;
+  color: var(--metal);
+  margin-top: 8px;
+  text-align: right;
+  letter-spacing: 0.1em;
+}
+
+/* ============ PILLAR ACCORDION ============ */
+.pillar-accordion {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.pillar-accordion:hover { border-color: var(--ink); }
+
+.pillar-summary {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pillar-summary:hover { background: var(--bg-deep); }
+
+.pillar-accordion.open { border-color: var(--ink); }
+.pillar-accordion.open .pillar-summary {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.pillar-num-mini {
+  font-family: var(--fm);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--metal);
+}
+
+.pillar-title-mini {
+  font-family: var(--fd);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+
+.pillar-accordion.open .pillar-title-mini { color: var(--bg); }
+
+.pillar-sub-mini {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.pillar-accordion.open .pillar-sub-mini { color: var(--rule); }
+
+.pillar-detail {
+  display: none;
+  padding: 22px 24px;
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+}
+.pillar-accordion.open .pillar-detail { display: block; }
+
+.pillar-detail p { font-size: 14px; margin-bottom: 12px; }
+
+.pillar-detail ul {
+  list-style: none;
+  margin: 14px 0;
+}
+
+.pillar-detail ul li {
+  padding: 6px 0 6px 22px;
+  position: relative;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.pillar-detail ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 12px;
+  height: 1px;
+  background: var(--metal);
+}
+
+.pillar-detail ul li strong { color: var(--ink); font-weight: 600; }
+
+.pillar-detail ul ul { margin: 4px 0 6px 12px; }
+.pillar-detail ul ul li { padding: 3px 0 3px 18px; font-size: 12.5px; }
+.pillar-detail ul ul li::before { width: 8px; left: 4px; top: 11px; background: var(--ink-soft); }
+
+.pillar-foot {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+/* ============ PLATFORM GRID ============ */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--rule);
+  margin: 18px 0;
+}
+
+.platform-tile {
+  padding: 14px 16px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.platform-tile:nth-child(3n) { border-right: none; }
+.platform-tile:nth-last-child(-n+3) { border-bottom: none; }
+
+.platform-tile .name {
+  font-family: var(--fd);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.platform-tile .desc {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* ============ TIMELINE ============ */
+.timeline {
+  margin: 20px 0;
+  border-left: 1px solid var(--metal);
+  padding-left: 24px;
+  margin-left: 4px;
+}
+
+.timeline-item {
+  margin-bottom: 22px;
+  position: relative;
+}
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-item::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  background: var(--metal);
+  position: absolute;
+  left: -28px;
+  top: 5px;
+  border: 2px solid var(--bg);
+}
+
+.timeline-item .week {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--metal);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.timeline-item .action {
+  font-family: var(--fd);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+
+.timeline-item .detail {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ============ TABLE SCROLL WRAPPER ============ */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============ RESPONSIVE ============ */
+
+/* Tablet — 1024px and below */
+@media (max-width: 1024px) {
+  main { padding: 32px 24px 64px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stat:nth-child(2) { border-right: none; }
+  .hero-stat:nth-child(1), .hero-stat:nth-child(2) { border-bottom: 1px solid var(--rule); }
+  .subject-grid { grid-template-columns: repeat(3, 1fr); }
+  .calc-body { grid-template-columns: 1fr; }
+  .calc-inputs { border-right: none; border-bottom: 1px solid var(--rule); }
+  .platform-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* Mobile — 768px and below */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+
+  /* TOP BAR — stack and tighten */
+  header.top-bar {
+    padding: 10px 14px;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .brand-block { gap: 10px; flex-wrap: wrap; }
+  .wordmark { font-size: 18px; }
+  .brand-divider { display: none; }
+  .property-context { font-size: 11px; width: 100%; }
+  .header-meta { gap: 8px; }
+  .header-meta .pill { font-size: 9px; padding: 3px 7px; letter-spacing: 0.14em; }
+  .header-meta .mono { font-size: 9px; }
+
+  /* TABS — smooth horizontal scroll w/ edge fade */
+  nav.tabs {
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    position: relative;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 13px 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+    min-height: 44px; /* tap target */
+  }
+  .tab-btn .tab-num { font-size: 9px; }
+  /* Right edge fade hint that there's more to scroll */
+  nav.tabs::after {
+    content: '';
+    position: sticky;
+    right: 0;
+    flex-shrink: 0;
+    width: 24px;
+    background: linear-gradient(to right, transparent, var(--ink));
+    pointer-events: none;
+    margin-left: -24px;
+  }
+
+  /* MAIN padding */
+  main { padding: 24px 16px 48px; }
+
+  /* PANEL HEADER */
+  .panel-header { margin-bottom: 28px; padding-bottom: 18px; }
+  .panel-header h2 { font-size: 24px; }
+  .panel-subtitle { font-size: 13px; }
+  .panel-caption { font-size: 10px; }
+
+  /* HERO STATS */
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-stat { padding: 16px 14px; }
+  .hero-stat .value { font-size: 20px; }
+  .hero-stat .label { font-size: 9px; margin-bottom: 8px; }
+  .hero-stat .value-sub { font-size: 11px; }
+
+  /* CALLOUT */
+  .callout-ink { padding: 20px 22px; margin: 22px 0; }
+  .callout-ink p { font-size: 14px; }
+
+  /* SUBJECT GRID */
+  .subject-grid { grid-template-columns: 1fr 1fr; }
+  .subject-item { padding: 10px 12px; }
+  .subject-item:nth-child(4n) { border-right: 1px solid var(--rule); }
+  .subject-item:nth-child(2n) { border-right: none; }
+  .subject-item:nth-last-child(-n+4) { border-bottom: 1px solid var(--rule); }
+  .subject-item:nth-last-child(-n+2) { border-bottom: none; }
+  .subject-item .label { font-size: 8px; }
+  .subject-item .value { font-size: 12px; }
+
+  /* COMP ACCORDION — 2-row grid layout on mobile */
+  .comp-accordion { margin-bottom: 8px; }
+  .comp-summary {
+    display: grid;
+    grid-template-columns: 32px 1fr 22px;
+    grid-template-rows: auto auto;
+    gap: 8px 10px;
+    padding: 14px 14px;
+    align-items: center;
+  }
+  .comp-summary > *:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .comp-summary > *:nth-child(2) { grid-column: 2; grid-row: 1; min-width: 0; }
+  .comp-summary > *:nth-child(5) { grid-column: 3; grid-row: 1; text-align: center; }
+  .comp-summary > .comp-stat-mini {
+    grid-row: 2;
+    text-align: left;
+    display: block !important;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule-soft);
+    min-width: 0;
+  }
+  .comp-summary > *:nth-child(3) { grid-column: 1 / 3; }
+  .comp-summary > *:nth-child(4) {
+    grid-column: 3 / 4;
+    text-align: right;
+    padding-left: 8px;
+  }
+  .comp-accordion.open .comp-summary > .comp-stat-mini { border-top-color: var(--ink-soft); }
+  .comp-stat-mini { min-width: 0; text-align: left; }
+  .comp-stat-mini.adjusted-comp { display: block !important; }
+  .comp-stat-mini .label { font-size: 8px; }
+  .comp-stat-mini .value { font-size: 12px; }
+  .comp-stat-mini.adjusted .value { font-size: 14px; }
+  .comp-id-mini { font-size: 12px; }
+  .comp-addr-mini { font-size: 13px; }
+  .comp-meta-mini { font-size: 11px; line-height: 1.4; }
+
+  /* COMP DETAIL & all internal tables — horizontal scroll */
+  .comp-detail { padding: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .comp-detail table { font-size: 11px; min-width: 360px; }
+  .comp-detail th, .comp-detail td { padding: 6px 8px; }
+  .comp-detail td.num, .comp-detail th.num { font-size: 11px; }
+
+  /* PILLAR ACCORDION */
+  .pillar-summary {
+    grid-template-columns: 32px 1fr 22px;
+    gap: 12px;
+    padding: 14px;
+  }
+  .pillar-num-mini { font-size: 12px; }
+  .pillar-title-mini { font-size: 14px; line-height: 1.25; }
+  .pillar-sub-mini { font-size: 11px; line-height: 1.4; }
+  .pillar-detail { padding: 16px 14px; }
+  .pillar-detail p { font-size: 13px; }
+  .pillar-detail ul li { font-size: 12.5px; padding-left: 16px; }
+  .pillar-detail ul li::before { width: 10px; top: 12px; }
+  .pillar-detail ul ul li { font-size: 11.5px; padding-left: 14px; }
+
+  /* PULLQUOTE */
+  .pullquote { font-size: 14px; padding: 12px 0 12px 16px; }
+
+  /* CAVEAT */
+  .caveat-box { padding: 14px 16px; font-size: 12px; }
+
+  /* RECON NOTE */
+  .recon-note { padding: 16px 18px; }
+  .recon-note p { font-size: 12.5px; }
+
+  /* TABLES — horizontal scroll where needed */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll table { min-width: 600px; font-size: 11px; }
+  .table-scroll th, .table-scroll td { padding: 7px 8px; }
+
+  /* SECTION DIVIDER */
+  .section-divider { margin: 24px 0 16px; }
+  .section-divider .mark { font-size: 9px; margin: 0 10px; }
+
+  /* TWO COL */
+  .two-col { grid-template-columns: 1fr; gap: 14px; }
+  .info-card { padding: 16px 18px; }
+  .info-card p { font-size: 13px; }
+
+  /* PLATFORM GRID */
+  .platform-grid { grid-template-columns: 1fr; }
+  .platform-tile { padding: 12px 14px; }
+  .platform-tile:nth-child(3n) { border-right: 1px solid var(--rule); }
+  .platform-tile:nth-child(odd) { border-right: 1px solid var(--rule); }
+  .platform-tile { border-right: none; }
+
+  /* TIMELINE */
+  .timeline { padding-left: 20px; margin-left: 2px; }
+  .timeline-item::before { left: -25px; width: 8px; height: 8px; }
+  .timeline-item .week { font-size: 9px; }
+  .timeline-item .action { font-size: 14px; }
+  .timeline-item .detail { font-size: 12px; }
+
+  /* PRESET CHIPS */
+  .preset-chips { gap: 5px; margin-bottom: 16px; }
+  .preset-chips .mono { width: 100%; margin: 0 0 4px 0; }
+  .preset-chip { padding: 7px 11px; font-size: 11px; }
+
+  /* CALC HERO — stack, shrink input */
+  .calc-hero {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 20px;
+  }
+  .calc-hero .label { font-size: 9px; margin-bottom: 8px; }
+  .price-input-wrap { width: 100%; }
+  .currency-prefix { font-size: 28px; }
+  .calc-hero input#salePrice {
+    font-size: 32px;
+    width: calc(100% - 30px);
+    padding-right: 0;
+  }
+  .reset-btn { width: 100%; padding: 12px; font-size: 10px; }
+
+  /* CALC BODY */
+  .calc-inputs, .calc-breakdown { padding: 18px 20px; }
+  .calc-inputs h4, .calc-breakdown h4 { font-size: 9px; margin-bottom: 14px; }
+  .calc-input-row { gap: 10px; margin-bottom: 12px; padding-bottom: 12px; }
+  .calc-input-row label { font-size: 12.5px; }
+  .calc-input-row .hint { font-size: 8.5px; }
+  .calc-input-row input[type="number"] { width: 115px; padding: 8px 22px 8px 20px; font-size: 12px; }
+  .input-prefix, .input-suffix { font-size: 11px; }
+
+  /* CALC BREAKDOWN */
+  .calc-line { gap: 12px; padding: 7px 0; }
+  .calc-line .item { font-size: 12px; }
+  .calc-line .calc-detail { font-size: 8.5px; }
+  .calc-line .amount { font-size: 12px; }
+  .calc-total .item { font-size: 13px; }
+  .calc-total .amount { font-size: 13px; }
+
+  /* CALC RESULT */
+  .calc-result {
+    grid-template-columns: 1fr;
+    padding: 22px 20px;
+    gap: 6px;
+  }
+  .calc-result > div:nth-child(2) {
+    border-top: 1px solid var(--ink-soft);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+  .calc-result .label { font-size: 9px; }
+  .calc-result .sublabel { font-size: 11px; }
+  .calc-result .net-amount { font-size: 38px; line-height: 1; }
+  .calc-result .cost-pct { font-size: 10px; text-align: left; margin-top: 4px; }
+}
+
+/* Very small phones — iPhone SE 1st gen, etc */
+@media (max-width: 380px) {
+  main { padding: 20px 12px 40px; }
+  .panel-header h2 { font-size: 20px; }
+  .hero-stat .value { font-size: 17px; }
+  .calc-hero input#salePrice { font-size: 28px; }
+  .calc-result .net-amount { font-size: 32px; }
+  .calc-input-row input[type="number"] { width: 100px; }
+  .preset-chip { padding: 6px 9px; font-size: 10px; }
+  .comp-summary { grid-template-columns: 28px 1fr 20px; gap: 6px 8px; padding: 12px; }
+  .pillar-summary { grid-template-columns: 28px 1fr 20px; gap: 10px; padding: 12px; }
+  .subject-grid { grid-template-columns: 1fr; }
+  .subject-item { border-right: none !important; }
+  .subject-item:not(:last-child) { border-bottom: 1px solid var(--rule); }
+  .subject-item:last-child { border-bottom: none; }
+}
+
+@media print {
+  nav.tabs, .preset-chips, .reset-btn { display: none; }
+  .tab-panel { display: block !important; page-break-before: always; }
+  .tab-panel:first-of-type { page-break-before: avoid; }
+  .comp-accordion, .pillar-accordion { page-break-inside: avoid; }
+  .comp-detail, .pillar-detail { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="brand-block">
+    <div class="wordmark">{{WORDMARK_LEFT}}<span class="slash">{{WORDMARK_SEPARATOR}}</span>{{WORDMARK_RIGHT}}</div>
+    <span class="brand-divider">·</span>
+    <span class="property-context">{{SUBJECT_ADDRESS}} · {{SUBJECT_CITY_STATE}}</span>
+  </div>
+  <div class="header-meta">
+    <span class="pill">{{PILL_LABEL}}</span>
+    <span class="mono">{{PRESENTATION_DATE}}</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="overview"><span class="tab-num">01</span> Overview</button>
+  <button class="tab-btn" data-tab="cma"><span class="tab-num">02</span> Comparables</button>
+  <button class="tab-btn" data-tab="netsheet"><span class="tab-num">03</span> Net Sheet</button>
+  <button class="tab-btn" data-tab="marketing"><span class="tab-num">04</span> Marketing</button>
+</nav>
+
+<main>
+
+<!-- ============ TAB 1 OVERVIEW ============ -->
+<section class="tab-panel active" id="overview">
+  <div class="panel-header">
+    <div class="mono panel-caption">01 / OVERVIEW</div>
+    <h2>Executive overview</h2>
+    <div class="panel-subtitle">The recommendation, the evidence, the strategy</div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="label">Indicated Value</div>
+      <div class="value">{{INDICATED_VALUE_RANGE}}</div>
+      <div class="value-sub">Weighted comp reconciliation</div>
+    </div>
+    <div class="hero-stat primary">
+      <div class="label">Recommended List</div>
+      <div class="value">{{RECOMMENDED_LIST}}</div>
+      <div class="value-sub">Defensible · 3–5% room</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Probable Sale</div>
+      <div class="value">{{PROBABLE_SALE_RANGE}}</div>
+      <div class="value-sub">60–120 days on market</div>
+    </div>
+    <div class="hero-stat">
+      <div class="label">Net to Seller</div>
+      <div class="value">{{NET_TO_SELLER}}</div>
+      <div class="value-sub">At list, before payoff</div>
+    </div>
+  </div>
+
+  <p class="lead">
+    {{LEAD_PARAGRAPH_1}}
+  </p>
+
+  <p>
+    {{LEAD_PARAGRAPH_2}}
+  </p>
+
+  <div class="callout-ink">
+    <div class="mono">STRATEGIC TAKEAWAY</div>
+    <p>
+      {{STRATEGIC_TAKEAWAY}}
+    </p>
+  </div>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h4>What this proposal contains</h4>
+      <p>
+        {{INFO_CARD_LEFT}}
+      </p>
+    </div>
+    <div class="info-card">
+      <h4>Why {{WORDMARK_LEFT}}{{WORDMARK_SEPARATOR}}{{WORDMARK_RIGHT}}</h4>
+      <p>
+        {{INFO_CARD_RIGHT}}
+      </p>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    {{CLOSING_PULLQUOTE}}
+  </div>
+</section>
+
+<!-- ============ TAB 2 MARKET ANALYSIS ============ -->
+<section class="tab-panel" id="cma">
+  <div class="panel-header">
+    <div class="mono panel-caption">02 / MARKET ANALYSIS</div>
+    <h2>Comparative market analysis</h2>
+    <div class="panel-subtitle">URAR-aligned sales comparison · Five comparables · Line-item adjustments</div>
+  </div>
+
+  <h3 style="margin-bottom: 6px;">Subject property</h3>
+
+  <div class="subject-grid">
+    <div class="subject-item"><div class="label">Built</div><div class="value">{{SUBJECT_BUILT}}</div></div>
+    <div class="subject-item"><div class="label">GLA</div><div class="value">{{SUBJECT_GLA}}</div></div>
+    <div class="subject-item"><div class="label">Beds / Baths</div><div class="value">{{SUBJECT_BEDS_BATHS}}</div></div>
+    <div class="subject-item"><div class="label">Lot</div><div class="value">{{SUBJECT_LOT}}</div></div>
+    <div class="subject-item"><div class="label">Construction</div><div class="value">{{SUBJECT_CONSTRUCTION}}</div></div>
+    <div class="subject-item"><div class="label">Garage</div><div class="value">{{SUBJECT_GARAGE}}</div></div>
+    <div class="subject-item"><div class="label">HVAC</div><div class="value">{{SUBJECT_HVAC}}</div></div>
+    <div class="subject-item"><div class="label">Water / Sewer</div><div class="value">{{SUBJECT_WATER_SEWER}}</div></div>
+    <div class="subject-item"><div class="label">Outbuildings</div><div class="value">{{SUBJECT_OUTBUILDINGS}}</div></div>
+    <div class="subject-item"><div class="label">Pool</div><div class="value">{{SUBJECT_POOL}}</div></div>
+    <div class="subject-item"><div class="label">School</div><div class="value">{{SUBJECT_SCHOOL}}</div></div>
+    <div class="subject-item"><div class="label">Kitchen</div><div class="value">{{SUBJECT_KITCHEN}}</div></div>
+    <div class="subject-item"><div class="label">Prior Listing</div><div class="value">{{SUBJECT_HISTORY}}</div></div>
+  </div>
+
+  <p>
+    {{MARKET_CONDITIONS_PARA}}
+  </p>
+
+  <h3 style="margin: 28px 0 6px;">The comparables</h3>
+  <div class="mono" style="margin-bottom: 14px;">CLICK ANY COMP TO EXPAND ADJUSTMENTS</div>
+
+  {{COMP_LIST_HTML}}
+
+  <div class="section-divider"><span class="mark">RECONCILIATION</span></div>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Comp</th>
+        <th class="num">Sold</th>
+        <th class="num">Adjusted</th>
+        <th class="num">Net %</th>
+        <th class="num">$/sqft</th>
+        <th class="num">Weight</th>
+        <th class="num">Contribution</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{RECONCILIATION_TABLE_ROWS}}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="recon-note">
+    <h4>Weighting rationale</h4>
+    <p>
+      {{WEIGHTING_RATIONALE}}
+    </p>
+  </div>
+
+  <div class="caveat-box">
+    <div class="caveat-label">Important Disclosures</div>
+    {{CAVEATS_BLOCK}}
+  </div>
+</section>
+
+<!-- ============ TAB 3 NET SHEET ============ -->
+<section class="tab-panel" id="netsheet">
+  <div class="panel-header">
+    <div class="mono panel-caption">03 / NET SHEET · INTERACTIVE</div>
+    <h2>Seller's net sheet calculator</h2>
+    <div class="panel-subtitle">Live Michigan-format calculation · Edit any value to recalculate</div>
+  </div>
+
+  <div class="preset-chips">
+    <span class="mono">QUICK PRESETS</span>
+    {{PRESET_CHIPS_HTML}}
+  </div>
+
+  <div class="calc-wrap">
+    <div class="calc-hero">
+      <div>
+        <div class="label">Sale Price</div>
+        <div class="price-input-wrap">
+          <span class="currency-prefix">$</span>
+          <input type="number" id="salePrice" value="{{DEFAULT_SALE_PRICE}}" step="100">
+        </div>
+      </div>
+      <button class="reset-btn" id="resetBtn">Reset Defaults</button>
+    </div>
+
+    <div class="calc-body">
+      <div class="calc-inputs">
+        <h4>Adjustable Inputs</h4>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="commissionPct">Real Estate Commission</label>
+            <div class="hint">Total commission percentage</div>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="commissionPct" value="{{DEFAULT_COMMISSION_PCT}}" step="0.1" min="0" max="20">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="adminFee">Holden/GR Admin Fee</label>
+            <div class="hint">Flat brokerage admin</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="adminFee" value="{{DEFAULT_ADMIN_FEE}}" step="5">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="titleFee">Title Company Fee</label>
+            <div class="hint">Closing / settlement</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="titleFee" value="{{DEFAULT_TITLE_FEE}}" step="5">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="taxProration">Tax Proration</label>
+            <div class="hint">Varies by closing date</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="taxProration" value="{{DEFAULT_TAX_PRORATION}}" step="50">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="wellSeptic">Well/Septic Inspection</label>
+            <div class="hint">Rural MI customary</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="wellSeptic" value="{{DEFAULT_WELL_SEPTIC}}" step="25">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="mortgagePayoff">Mortgage Payoff</label>
+            <div class="hint">Existing loan balance</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="mortgagePayoff" value="{{DEFAULT_MORTGAGE_PAYOFF}}" step="1000">
+          </div>
+        </div>
+
+        <div class="calc-input-row">
+          <div>
+            <label for="buyerConcessions">Buyer Concessions</label>
+            <div class="hint">Negotiated credits</div>
+          </div>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="buyerConcessions" value="{{DEFAULT_BUYER_CONCESSIONS}}" step="500">
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-breakdown">
+        <h4>Calculated Costs</h4>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Real Estate Commission</span>
+            <span class="calc-detail" id="commissionDetail">6.0% × $549,900</span>
+          </div>
+          <div class="amount" id="commissionAmt">$32,994</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">{{STATE_NAME}} State Transfer Tax</span>
+            <span class="calc-detail">${{STATE_TAX_RATE_PER_500}} per $500</span>
+          </div>
+          <div class="amount" id="stateTaxAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">{{COUNTY_NAME}} County Transfer Tax</span>
+            <span class="calc-detail">${{COUNTY_TAX_RATE_PER_500}} per $500</span>
+          </div>
+          <div class="amount" id="countyTaxAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Owner's Title Insurance</span>
+            <span class="calc-detail">MI graduated rate</span>
+          </div>
+          <div class="amount" id="titleInsAmt">$2,060</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Title Company Closing Fee</span>
+            <span class="calc-detail">Flat fee</span>
+          </div>
+          <div class="amount" id="titleFeeAmt">$395</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Holden/GR Admin Fee</span>
+            <span class="calc-detail">Flat fee</span>
+          </div>
+          <div class="amount" id="adminFeeAmt">$495</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Property Tax Proration</span>
+            <span class="calc-detail">Estimated</span>
+          </div>
+          <div class="amount" id="taxProrationAmt">$1,800</div>
+        </div>
+
+        <div class="calc-line deduct">
+          <div>
+            <span class="item">Well/Septic Inspection</span>
+            <span class="calc-detail">Customary rural MI</span>
+          </div>
+          <div class="amount" id="wellSepticAmt">$500</div>
+        </div>
+
+        <div class="calc-line deduct" id="concessionsLine" style="display:none;">
+          <div>
+            <span class="item">Buyer Concessions</span>
+            <span class="calc-detail">Negotiated credit</span>
+          </div>
+          <div class="amount" id="concessionsAmt">$0</div>
+        </div>
+
+        <div class="calc-line deduct" id="payoffLine" style="display:none;">
+          <div>
+            <span class="item">Mortgage Payoff</span>
+            <span class="calc-detail">Existing loan</span>
+          </div>
+          <div class="amount" id="payoffAmt">$0</div>
+        </div>
+
+        <div class="calc-total">
+          <div class="item">Total Seller Costs</div>
+          <div class="amount" id="totalCosts">$42,974</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-result">
+      <div>
+        <div class="label">Estimated Net to Seller</div>
+        <div class="sublabel">Cash proceeds after all costs and payoffs</div>
+      </div>
+      <div>
+        <div class="net-amount" id="netToSeller">$506,926</div>
+        <div class="cost-pct" id="costPct">COSTS · 7.81% OF SALE</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top: 18px; font-size: 12.5px; color: var(--ink-soft);">
+    {{NET_SHEET_FOOTER_CITATIONS}}
+  </p>
+</section>
+
+<!-- ============ TAB 4 MARKETING ============ -->
+<section class="tab-panel" id="marketing">
+  <div class="panel-header">
+    <div class="mono panel-caption">04 / MARKETING</div>
+    <h2>The marketing plan</h2>
+    <div class="panel-subtitle">Six pillars built around this property's specific buyer profile</div>
+  </div>
+
+  <p class="lead">
+    {{MARKETING_LEAD_PARAGRAPH}}
+  </p>
+
+  <div class="mono" style="margin: 16px 0 14px;">CLICK ANY PILLAR TO EXPAND EXECUTION DETAIL</div>
+
+  {{MARKETING_PILLARS_HTML}}
+
+  <div class="section-divider"><span class="mark">TIMELINE</span></div>
+
+  <div class="timeline">
+    {{TIMELINE_PHASES_HTML}}
+  </div>
+
+  <div class="pullquote">
+    {{MARKETING_CLOSING_PULLQUOTE}}
+  </div>
+</section>
+
+</main>
+
+<script>
+// ============ TABS ============
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabPanels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    // Scroll page to top on tab switch
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll active tab into view within the tab bar (mobile)
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  });
+});
+
+// ============ ACCORDIONS ============
+document.querySelectorAll('.comp-accordion .comp-summary, .pillar-accordion .pillar-summary').forEach(summary => {
+  summary.addEventListener('click', () => {
+    const accordion = summary.closest('.comp-accordion, .pillar-accordion');
+    accordion.classList.toggle('open');
+  });
+});
+
+// ============ NET SHEET CALC ============
+const fmt = (n) => '$' + Math.round(n).toLocaleString();
+
+function calcTitleInsurance(price) {
+  {{TITLE_INSURANCE_FUNCTION_BODY}}
+}
+
+function calcStateTransferTax(price) {
+  if (price <= 0) return 0;
+  return Math.ceil(price / 500) * {{STATE_TAX_RATE_PER_500}};
+}
+
+function calcCountyTransferTax(price) {
+  if (price <= 0) return 0;
+  return Math.ceil(price / 500) * {{COUNTY_TAX_RATE_PER_500}};
+}
+
+const inputs = {
+  salePrice: document.getElementById('salePrice'),
+  commissionPct: document.getElementById('commissionPct'),
+  adminFee: document.getElementById('adminFee'),
+  titleFee: document.getElementById('titleFee'),
+  taxProration: document.getElementById('taxProration'),
+  wellSeptic: document.getElementById('wellSeptic'),
+  mortgagePayoff: document.getElementById('mortgagePayoff'),
+  buyerConcessions: document.getElementById('buyerConcessions')
+};
+
+const defaults = {
+  salePrice: {{DEFAULT_SALE_PRICE}},
+  commissionPct: {{DEFAULT_COMMISSION_PCT}},
+  adminFee: {{DEFAULT_ADMIN_FEE}},
+  titleFee: {{DEFAULT_TITLE_FEE}},
+  taxProration: {{DEFAULT_TAX_PRORATION}},
+  wellSeptic: {{DEFAULT_WELL_SEPTIC}},
+  mortgagePayoff: {{DEFAULT_MORTGAGE_PAYOFF}},
+  buyerConcessions: {{DEFAULT_BUYER_CONCESSIONS}}
+};
+
+function recalc() {
+  const price = parseFloat(inputs.salePrice.value) || 0;
+  const commissionPct = parseFloat(inputs.commissionPct.value) || 0;
+  const adminFee = parseFloat(inputs.adminFee.value) || 0;
+  const titleFee = parseFloat(inputs.titleFee.value) || 0;
+  const taxProration = parseFloat(inputs.taxProration.value) || 0;
+  const wellSeptic = parseFloat(inputs.wellSeptic.value) || 0;
+  const mortgagePayoff = parseFloat(inputs.mortgagePayoff.value) || 0;
+  const buyerConcessions = parseFloat(inputs.buyerConcessions.value) || 0;
+
+  const commission = price * (commissionPct / 100);
+  const stateTax = calcStateTransferTax(price);
+  const countyTax = calcCountyTransferTax(price);
+  const titleIns = calcTitleInsurance(price);
+
+  const totalCosts = commission + stateTax + countyTax + titleIns + titleFee + adminFee + taxProration + wellSeptic + buyerConcessions + mortgagePayoff;
+  const net = price - totalCosts;
+  const costPct = price > 0 ? (totalCosts / price * 100) : 0;
+
+  document.getElementById('commissionDetail').textContent = `${commissionPct.toFixed(1)}% × ${fmt(price)}`;
+  document.getElementById('commissionAmt').textContent = fmt(commission);
+  document.getElementById('stateTaxAmt').textContent = fmt(stateTax);
+  document.getElementById('countyTaxAmt').textContent = fmt(countyTax);
+  document.getElementById('titleInsAmt').textContent = fmt(titleIns);
+  document.getElementById('titleFeeAmt').textContent = fmt(titleFee);
+  document.getElementById('adminFeeAmt').textContent = fmt(adminFee);
+  document.getElementById('taxProrationAmt').textContent = fmt(taxProration);
+  document.getElementById('wellSepticAmt').textContent = fmt(wellSeptic);
+
+  const concessionsLine = document.getElementById('concessionsLine');
+  if (buyerConcessions > 0) {
+    concessionsLine.style.display = 'grid';
+    document.getElementById('concessionsAmt').textContent = fmt(buyerConcessions);
+  } else {
+    concessionsLine.style.display = 'none';
+  }
+
+  const payoffLine = document.getElementById('payoffLine');
+  if (mortgagePayoff > 0) {
+    payoffLine.style.display = 'grid';
+    document.getElementById('payoffAmt').textContent = fmt(mortgagePayoff);
+  } else {
+    payoffLine.style.display = 'none';
+  }
+
+  document.getElementById('totalCosts').textContent = fmt(totalCosts);
+  document.getElementById('netToSeller').textContent = fmt(net);
+  document.getElementById('costPct').textContent = `COSTS · ${costPct.toFixed(2)}% OF SALE`;
+}
+
+Object.values(inputs).forEach(input => input.addEventListener('input', recalc));
+
+document.querySelectorAll('.preset-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    inputs.salePrice.value = chip.dataset.preset;
+    recalc();
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  Object.keys(defaults).forEach(key => { inputs[key].value = defaults[key]; });
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.preset-chip[data-preset="{{DEFAULT_SALE_PRICE}}"]').classList.add('active');
+  recalc();
+});
+
+recalc();
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key >= '1' && e.key <= '4') {
+    const idx = parseInt(e.key) - 1;
+    if (tabButtons[idx]) tabButtons[idx].click();
+  }
+});
+</script>
+
+</body>
+</html>
