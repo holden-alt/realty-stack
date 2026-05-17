@@ -102,6 +102,8 @@ Skip any section the dump covered thoroughly.
 
 ### Step E — Draft each section in Email Voice
 
+**Load `knowledge/voice-guide.md`** before drafting any section — the 6 brand voice tenets shape every prose decision and are non-negotiable per CLAUDE.md design principle 1.
+
 For each section, draft prose using the realtor's Email Voice from their voice profile:
 
 - Match sentence length patterns, opener style, signoff usage
@@ -261,6 +263,7 @@ Custom sections: skill proposes the most natural tab based on theme; agent confi
 ## What this skill never does
 
 - Fabricate stats, awards, or testimonials — every fact is realtor-supplied or skipped
+- Generate "exclusive listing", "off-market", or "private listing" language anywhere in the template — this skill drafts reusable agent pitch content (about-me, process, marketing philosophy, etc.), not listing-specific marketing copy. Those terms are reserved for verified-status listings and apply to /listing-presentation output, never the template.
 - Persist anything to `~/.config/realty-stack/voice-profile.md` or `~/.config/realty-stack/brand-kit.md` — those are owned by voice-draft and brand-kit-capture
 - Skip the compliance check on testimonials (always flag protected-class language)
 - Auto-edit testimonials with protected-class language — flag and ask, never auto-edit
