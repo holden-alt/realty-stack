@@ -226,7 +226,17 @@ Only after explicit approval. No partial writes at any earlier point in the work
 - **Path conflict:** if the default path already exists, append a timestamp suffix: `<slug>-presentation-2026-05-17-1430.html`. Never overwrite an existing file silently.
 - **Override:** if the realtor explicitly says *"save to [path]"*, honor it.
 
-Use the Write tool. Confirm the final path back to the realtor in one line: *"Saved to ~/Downloads/1247-plainfield-presentation.html — open in Chrome / Safari to preview, ⌘P prints cleanly with all tabs expanded."*
+Use the Write tool to write the HTML file. After the HTML is written, invoke headless Chrome to produce a PDF:
+
+```
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/render-pdf.sh \
+  ~/Downloads/{slug}-presentation.html \
+  ~/Downloads/{slug}-presentation.pdf
+```
+
+Confirm BOTH paths back to the realtor in a single message: *"Saved to ~/Downloads/{slug}-presentation.html (browser preview, interactive net sheet / mortgage calc) and ~/Downloads/{slug}-presentation.pdf (print/email-ready). Open the HTML in Chrome to interact, or attach the PDF to your buyer/seller email."*
+
+If `render-pdf.sh` exits non-zero (Chrome not found or render error), still confirm the HTML path and tell the realtor: *"Saved HTML to ~/Downloads/{slug}-presentation.html. Couldn't auto-generate PDF — install Chrome from google.com/chrome to get auto-PDF, or open the HTML in any browser and Cmd+P → Save as PDF."*
 
 ---
 
@@ -281,6 +291,8 @@ The realtor can adjust any of the following at any point during the Step 7 loop.
 | Output file path already exists | Append timestamp suffix: `<slug>-presentation-2026-05-17-1430.html`. Never overwrite silently. |
 | Brand kit missing on invocation | Run `brand-kit-capture` inline to completion, then return to original /cma request. |
 | Voice profile missing on invocation | Run `voice-draft` inline to completion, then return to original /cma request. |
+| Chrome / Chromium not installed | `render-pdf.sh` exits with error; skill catches it, writes HTML anyway, tells realtor: *"Saved HTML to ~/Downloads/{slug}-presentation.html. Couldn't auto-generate PDF — install Chrome from google.com/chrome to get auto-PDF, or open the HTML in any browser and Cmd+P → Save as PDF."* |
+| PDF rendering fails for other reason | Same fallback as above — HTML always lands; PDF is best-effort. |
 
 ---
 

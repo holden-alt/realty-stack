@@ -160,6 +160,31 @@ Every Realty Stack session loads the realtor's brand kit from `~/.config/realty-
 
 ---
 
+## Artifact output contract
+
+Every Realty Stack visual-output skill (any skill that produces a presentation, listing flyer, social card, property website, or other shareable visual artifact) MUST produce BOTH:
+
+- `.html` — browser preview, interactive, full @media screen layout
+- `.pdf` — print/email-ready, @media print layout, generated via `scripts/render-pdf.sh` (headless Chrome)
+
+Both files land in `~/Downloads/` with the same slug, different extensions. The skill confirms BOTH paths back to the realtor in a single message.
+
+### What every Realty Stack visual-output skill MUST do
+
+1. **Write HTML first.** Use the Write tool. Default path: `~/Downloads/<slug>.html`. Use the same path-conflict-handling pattern as other skills (timestamp suffix on collision).
+2. **Invoke `${CLAUDE_PLUGIN_ROOT}/scripts/render-pdf.sh <html-path> <pdf-path>`** to produce the PDF. The script handles all the headless Chrome plumbing — find the binary, render the file, exit with clear error if Chrome is missing.
+3. **Confirm BOTH paths back to the realtor in a single message.** Don't surface the PDF generation as a separate step.
+4. **Fail gracefully on Chrome missing.** If `render-pdf.sh` exits non-zero, the skill still completed successfully — HTML landed. Tell the realtor: *"Saved HTML to ~/Downloads/{slug}.html. Couldn't auto-generate PDF — install Chrome from google.com/chrome to get auto-PDF, or open the HTML in any browser and Cmd+P → Save as PDF."*
+
+### What every Realty Stack visual-output skill MUST NOT do
+
+- Produce HTML only and instruct the realtor to "use Cmd+P" — realtors don't know what Cmd+P is; the script removes that friction
+- Use a different PDF generation tool (wkhtmltopdf, pandoc, WeasyPrint) — the canonical `scripts/render-pdf.sh` uses headless Chrome specifically because it applies `@media print` rules correctly (other tools have subtle differences)
+- Embed PDF-specific layout in the HTML — keep the HTML clean for browser; let `@media print` handle the PDF layout
+- Auto-open the PDF after generation — output is for realtor to review; auto-open is surprising behavior
+
+---
+
 ## Testing rules
 
 Every new skill MUST be tested on Holden's real work before commit. The PR description includes:

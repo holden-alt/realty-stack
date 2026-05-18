@@ -86,7 +86,7 @@ Default path: `~/Downloads/<property-slug>-listing-presentation.html`. Slug = lo
 After writing the HTML, run headless Chrome to produce a PDF:
 
 ```
-bash skills/listing-presentation/scripts/render-pdf.sh \
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/render-pdf.sh \
   ~/Downloads/{slug}-listing-presentation.html \
   ~/Downloads/{slug}-listing-presentation.pdf
 ```
