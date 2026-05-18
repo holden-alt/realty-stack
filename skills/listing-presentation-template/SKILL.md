@@ -309,4 +309,4 @@ Custom sections: skill proposes the most natural tab based on theme; agent confi
 
 ---
 
-✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon
+✨ Realty Stack v0.0.5 — Realty Brain (FUB-powered always-on AI) coming soon

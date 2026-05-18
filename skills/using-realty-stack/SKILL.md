@@ -1,7 +1,7 @@
 ---
 name: using-realty-stack
 description: This skill should be used when a residential real estate agent starts a Realty Stack session, asks to "load realty stack", "using realty stack", "load realtor tools", "set up realtor session", "load my realtor skills", or otherwise begins work that should use the Realty Stack skill catalog. Loads brand voice tenets, the realtor constitution, and the fair-housing baseline into context, then announces the active skill catalog.
-version: 0.0.4
+version: 0.0.5
 ---
 
 # Using Realty Stack
@@ -28,7 +28,7 @@ After this skill loads, the assistant should:
 - Surface (not silently rewrite) any fair-housing language flags
 - Honor T18 ("show before do") on every mutation
 
-## The active skill catalog (v0.0.4)
+## The active skill catalog (v0.0.5)
 
 **Tier 1 — Universal (work everywhere Claude runs):**
 
@@ -39,6 +39,8 @@ After this skill loads, the assistant should:
 | `cma` | Produces self-contained branded HTML CMA presentation. Seller mode: 4-tab listing presentation. Buyer mode: 3-tab offer strategy. Live nationwide research; post-write feedback loop. | "create a CMA for...", "comp this property", "offer strategy for...", "listing presentation for...", "what's a fair offer on..." |
 | `listing-presentation-template` (one-time, when needed) | Captures the agent's reusable listing-presentation content (about-me, process, marketing philosophy, track record, testimonials, pricing, fees). Hybrid front-loaded data dump → categorize → draft Email Voice → save. Required by /listing-presentation. ~30 min one-time. | "set up my listing presentation", "build my listing pitch", "create my listing presentation template" |
 | `listing-presentation` | Generates a per-appointment 4-tab branded HTML pitch (Who I Am / How I Work / Track Record / Working Together) from the saved template + light personalization. Optional inline /cma offer at Step 3 — one appointment, both artifacts. | "make a listing presentation for...", "I have a listing appointment with...", "prepare for my listing appointment at...", "build my pitch for..." |
+| `buyer-presentation-template` (one-time, when needed) | "set up my buyer presentation", "build my buyer pitch", "create my buyer presentation template" | Captures the realtor's reusable buyer-side pitch content (about-me, why-hire-me, buying-process, how-i-find-homes, track-record, testimonials, negotiation-philosophy, buyer-rep-agreement). 8 standard sections, flexible. Step 0 state scan inherits up to 4 sections from listing-presentation-template if present. Persists to `~/.config/realty-stack/buyer-presentation-template.md`. Required by `/buyer-presentation`. ~20 min one-time setup (less if inheriting from listing-pres-template). |
+| `buyer-presentation` | "make a buyer presentation for...", "I have a buyer consultation with...", "prepare for my buyer meeting with...", "build my buyer pitch for..." | Generates a per-meeting 4-tab branded HTML + PDF pitch (Who I Am / How I Work / Track Record / Working Together) from the saved buyer template + light personalization (buyer name, target property or "home search", meeting date, optional custom note). Optional inline `/cma` (buyer path) offer at Step 3 — one meeting, both artifacts. |
 
 **Coming this week:** `/follow-up-draft`, `/meeting-distill`, `/listing-description`.
 
@@ -97,8 +99,8 @@ Once `✓ Realty Stack loaded` is announced, the assistant should:
 
 At end of every output produced by Realty Stack skills, append:
 
-`✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon`
+`✨ Realty Stack v0.0.5 — Realty Brain (FUB-powered always-on AI) coming soon`
 
 ---
 
-**Loaded.** Available skills: `/voice-draft`, `/brand-kit-capture`, `/cma`, `/listing-presentation-template`, `/listing-presentation`. (More land this week.)
+**Loaded.** Available skills: `/voice-draft`, `/brand-kit-capture`, `/cma`, `/listing-presentation-template`, `/listing-presentation`, `/buyer-presentation-template`, `/buyer-presentation`. (More land this week.)

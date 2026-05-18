@@ -311,4 +311,4 @@ The realtor can adjust any of the following at any point during the Step 7 loop.
 
 ---
 
-✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon
+✨ Realty Stack v0.0.5 — Realty Brain (FUB-powered always-on AI) coming soon

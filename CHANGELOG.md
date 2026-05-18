@@ -2,6 +2,26 @@
 
 All notable changes to Realty Stack are tracked here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [Semantic Versioning](https://semver.org/).
 
+## [0.0.5] — 2026-05-18
+
+### Added
+- **/buyer-presentation-template skill** — one-time consultative builder for the realtor's reusable buyer-side pitch content (about-me, why-hire-me, buying-process, how-i-find-homes, track-record, testimonials, negotiation-philosophy, buyer-rep-agreement). 8 standard sections mapped to the same 4-tab structure as listing-presentation. Step 0 state scan inherits up to 4 sections from listing-presentation-template if present — realtor only fills the 4 buyer-specific sections. First concrete payoff of the new State scan contract.
+- **/buyer-presentation skill** — per-meeting skill that loads the saved buyer template + light personalization (buyer name, target property OR "home search", meeting date, optional custom note) and produces both `.html` (browser preview) and `.pdf` (print/email-ready) via the canonical Artifact output contract. Optional inline `/cma` (buyer path) offer at Step 3 — one meeting, both artifacts.
+- **`scripts/render-pdf.sh`** (promoted from skills/listing-presentation/scripts/) — shared headless-Chrome PDF renderer. Used by every visual-output skill per the new Artifact output contract.
+- **CLAUDE.md "Artifact output contract"** — canonical rule: every visual-output skill produces BOTH `.html` and `.pdf`. Documents render-pdf.sh usage, graceful Chrome-missing fallback, MUST do / MUST NOT do.
+- **CLAUDE.md "State scan contract"** — canonical rule: every intake skill scans existing `~/.config/realty-stack/` state BEFORE asking the realtor for material. Pulls inheritable content from sibling artifacts. The system gets smarter as it accumulates state.
+
+### Changed
+- **/cma now produces both `.html` and `.pdf`** by default (seller AND buyer paths). Step 8 invokes the shared `render-pdf.sh`. Closes the asymmetry with /listing-presentation (which got the same treatment in v0.0.4).
+- **/listing-presentation-template, /brand-kit-capture, /voice-draft** — each gains a Step 0 state scan per the new State scan contract. Inherits relevant fields/sections from sibling artifacts where they exist (e.g., brand-kit-capture pre-fills agent name from voice profile; voice-draft offers to mine listing-pres template About Me prose as supplemental voice samples).
+- **/listing-presentation SKILL.md** — render-pdf.sh path updated to the shared `${CLAUDE_PLUGIN_ROOT}/scripts/render-pdf.sh`.
+- **using-realty-stack overlay** — catalog updated v0.0.4 → v0.0.5 with rows for both new buyer-side skills.
+- **Funnel hook footer** — synced across all 8 skills to `✨ Realty Stack v0.0.5`.
+
+### Notes
+- The two new contracts (Artifact output, State scan) are the architectural backbone for v0.0.5+. Future skills inherit them automatically — every new intake skill scans state before asking; every new visual skill produces HTML+PDF.
+- The buyer-presentation pair is the first concrete test of the State scan contract — agents who already built their listing-presentation-template see 4 of 8 sections pre-populated before being asked anything.
+
 ## [0.0.4] — 2026-05-17
 
 ### Added

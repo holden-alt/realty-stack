@@ -220,4 +220,4 @@ Template prose is already drafted in Email Voice at template build time — do N
 
 ---
 
-✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon
+✨ Realty Stack v0.0.5 — Realty Brain (FUB-powered always-on AI) coming soon
