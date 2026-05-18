@@ -30,6 +30,25 @@ If the realtor declines or says "later," respect that and answer their actual qu
 
 Work through these steps in order. Do not skip steps or proceed without sufficient input.
 
+### Step 0 — State scan
+
+Before asking the realtor for voice samples or Agent Profile fields, scan canonical realty-stack state locations per CLAUDE.md State scan contract:
+
+```bash
+ls ~/.config/realty-stack/brand-kit.md ~/.config/realty-stack/listing-presentation-template.md ~/.config/realty-stack/buyer-presentation-template.md 2>/dev/null
+```
+
+For each found artifact, identify what's relevant to voice-draft's intake (Agent Profile fields, voice samples):
+
+- **brand kit** — usually has the agent's wordmark which encodes some agent identity hints (e.g., "Holden/GR" implies the agent is Holden + market is Grand Rapids). Could pre-fill primary market from this. Doesn't have agent name/brokerage directly (brand kit doesn't store those).
+- **listing-presentation-template or buyer-presentation-template** — Their About Me sections contain agent prose written in the agent's own voice. Could mine the About Me text as additional voice samples for voice analysis. Surface to the realtor: *"Found your listing-presentation-template — I can use its About Me prose as an additional voice sample alongside the emails/texts you'll paste in Steps B/C. That'll sharpen the voice analysis."*
+
+**If nothing inheritable found:** fall through silently to Step A.
+
+**If listing-presentation-template or buyer-presentation-template found:** offer to mine its About Me prose as supplemental voice samples (in addition to the emails/texts the realtor will provide).
+
+**If brand kit found:** pre-fill primary market suggestion if the wordmark encodes a market hint (low-confidence; surface to realtor for confirmation).
+
 ### Step A — Collect Agent Profile
 
 Collect four fields. Ask for all four in a single message to minimize back-and-forth:

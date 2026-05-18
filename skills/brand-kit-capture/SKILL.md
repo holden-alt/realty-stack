@@ -24,6 +24,38 @@ Two trigger paths:
 
 Work through steps A through I in order. Do not skip steps or proceed without sufficient input.
 
+### Step 0 — State scan
+
+Before asking the realtor for brand details, scan canonical realty-stack state locations per CLAUDE.md State scan contract:
+
+```bash
+ls ~/.config/realty-stack/voice-profile.md ~/.config/realty-stack/listing-presentation-template.md ~/.config/realty-stack/buyer-presentation-template.md ~/.config/realty-stack/brand-assets/ 2>/dev/null
+```
+
+For each found artifact, identify what's relevant to brand-kit-capture's intake (wordmark, tagline, colors, fonts, asset files, brand notes):
+
+- **voice profile** — pull agent name + brokerage from Agent Profile section. Don't re-ask for these; pre-fill the wordmark suggestion from them (e.g., agent name "Holden Richardson" + brokerage "RealSavvy" → suggest wordmark "Holden/RS" or similar; agent can override).
+- **brand-assets directory** — list any existing files (logo.svg, headshot.png, etc.). Surface as "I see you already have these asset files — want to reuse them?"
+- **listing-presentation-template or buyer-presentation-template** — usually don't carry brand info, but check the `headshot_override` optional field; if set, that's a hint about which photo the agent prefers.
+
+**If nothing inheritable found:** fall through silently to Step A.
+
+**If voice profile found:** report and offer pre-fill:
+
+> *"Found your voice profile. I can pre-fill these fields from it:*
+> *- Agent name: {AGENT_NAME}*
+> *- Brokerage: {AGENT_BROKERAGE}*
+> *- Primary market: {AGENT_PRIMARY_MARKET}*
+>
+> *I'll use these to suggest a starting wordmark you can edit. Sound good, or want to override any of those?"*
+
+If realtor accepts: pre-fill the relevant fields; proceed to Step A with fewer questions.
+If realtor wants to override: ask them what to use; then proceed.
+
+**If brand-assets directory has files:** surface separately:
+
+> *"Found existing brand assets at ~/.config/realty-stack/brand-assets/: {list}. Reuse, replace, or skip during Step E (asset files)?"*
+
 ### Step A — Tagline / positioning (1 field, optional)
 
 Ask for the agent's single-line positioning tagline, e.g., *"Holden/GR — Ambassador To RealSavvy"*.

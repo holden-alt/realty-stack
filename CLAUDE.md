@@ -185,6 +185,45 @@ Both files land in `~/Downloads/` with the same slug, different extensions. The 
 
 ---
 
+## State scan contract
+
+Every Realty Stack intake/onboarding skill (any skill that asks the realtor for material — content, settings, preferences, brand details, voice samples) MUST scan the user's existing Realty Stack state BEFORE asking for material. Pulls relevant content from sibling artifacts where it overlaps. The realtor only fills gaps. The system gets smarter as it accumulates state — compounding value of accumulated state is the whole product thesis.
+
+### Canonical scan locations
+
+Every intake skill checks these locations (in this priority order):
+
+- `~/.config/realty-stack/voice-profile.md` — agent name, brokerage, primary market, signoffs, voice samples
+- `~/.config/realty-stack/brand-kit.md` — wordmark, colors, fonts, tagline, asset paths
+- `~/.config/realty-stack/listing-presentation-template.md` — listing pitch content (about-me, process, marketing, track record, testimonials, pricing, fees)
+- `~/.config/realty-stack/buyer-presentation-template.md` — buyer pitch content
+- `~/.config/realty-stack/brand-assets/` — base64-embedable visual assets (logo, headshot, wordmark mark)
+- `~/Downloads/*-listing-presentation.{html,pdf}` — past listing presentations (mine for stats, sample addresses)
+- `~/Downloads/*-cma.{html,pdf}` and `~/Downloads/*-presentation.{html,pdf}` — past CMAs (recent comp work, agent's listing inventory)
+
+If a future state file or artifact is added to Realty Stack, add it to this list — every intake skill should be able to inherit from any new sibling without per-skill code changes.
+
+### What every Realty Stack intake skill MUST do (canonical Step 0)
+
+Before the first user-facing intake question:
+
+1. **Scan canonical locations.** Use Bash to check existence (`test -f`, `ls`) of the files/directories above. Build an in-memory inventory.
+2. **Identify what's relevant to THIS skill's intake.** Each skill knows what fields/sections it's about to ask for; match found artifacts against those fields.
+3. **Report findings to the realtor in plain English.** Example: *"Found your voice profile, brand kit, and listing-presentation-template. I'll pull About Me, Why Hire Me, Track Record, Testimonials, Pricing, and Fees from there — that covers 6 of the 8 standard sections. Want me to ask about the 2 buyer-specific sections (How I Find Homes, Negotiation Philosophy), or do you have material to drop in?"*
+4. **If realtor accepts inheritance:** pre-populate the section structure / fields with the inherited content. Mark inherited content clearly in any refinement loop (Step F/G) so the realtor knows what came from elsewhere.
+5. **For sections / fields NOT covered by inheritance:** fall through to the existing intake workflow (Step A — front-loaded data dump, or section-specific questions).
+6. **Skip the scan output entirely when nothing was found.** Don't surface "I scanned and found nothing" — feels noisy. Fall through silently to Step A.
+
+### What every Realty Stack intake skill MUST NOT do
+
+- Re-ask the realtor for information that already exists in another realty-stack state file (agent name from voice profile, brokerage from voice profile, colors from brand kit, testimonials from listing-pres-template, etc.)
+- Auto-inherit without asking — always confirm with the realtor first: *"I can pre-populate X from Y — want me to?"*
+- Inherit content that needs domain-shift editing (e.g., listing-side "Marketing Philosophy" → buyer-side "How I Find Homes") without flagging the shift for refinement
+- Mutate any state file the realtor didn't approve a write to — Step H file-write is the only write point in any intake skill
+- Skip the scan when the realtor explicitly says "start fresh" or invokes with an obvious "rebuild from scratch" intent
+
+---
+
 ## Testing rules
 
 Every new skill MUST be tested on Holden's real work before commit. The PR description includes:

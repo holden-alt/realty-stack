@@ -40,7 +40,41 @@ Pattern matches `/cma`. Never produce un-voiced or un-branded output.
 
 Work through Steps A through H in order. Do not write the template file until Step H.
 
-### Step A — Front-loaded data dump
+### Step 0 — State scan
+
+Before asking the realtor for material, scan canonical realty-stack state locations per CLAUDE.md State scan contract:
+
+```bash
+ls ~/.config/realty-stack/voice-profile.md ~/.config/realty-stack/brand-kit.md ~/.config/realty-stack/buyer-presentation-template.md 2>/dev/null
+ls ~/Downloads/*-listing-presentation.{html,pdf} ~/Downloads/*-cma.{html,pdf} ~/Downloads/*-presentation.{html,pdf} 2>/dev/null
+```
+
+Build an inventory of what was found. For each found artifact, identify what's relevant to the listing-presentation-template's 8 standard sections:
+
+- **voice profile** — agent name, brokerage, primary market, signoffs (used in every section's prose); always relevant when present (overlay already loads it)
+- **brand kit** — wordmark, colors, fonts, headshot (used in cover hero of /listing-presentation output, not template); always relevant when present
+- **buyer-presentation-template** — IF present, sections About Me, Why Hire Me, Recent Track Record, Testimonials, Pricing Philosophy (as Negotiation Philosophy in buyer template), Fee Structure (as Buyer Rep Agreement in buyer template) are highly inheritable. My Buying Process / How I Find Homes are NOT relevant to listing side.
+- **past CMAs / listing presentations in ~/Downloads/** — could mine for past listing addresses (Recent Track Record), brokerage stats; lower-priority, surface as "I can grep these for past listings if you want a head start on Track Record."
+
+**If nothing inheritable is found:** fall through silently to Step A.
+
+**If inheritable artifacts found:** report in plain English. Example:
+
+> *"Found your voice profile, brand kit, and buyer-presentation-template. I can pull these sections from your buyer-pres-template:*
+> *- About Me (100% reusable)*
+> *- Why Hire Me (90% — light edit pass for listing-side framing)*
+> *- Recent Track Record (75% — buyer-side closings may differ from listing-side)*
+> *- Testimonials (90% — you'll decide per-quote which translate)*
+>
+> *That covers 4 of the 8 standard sections. For the listing-specific ones (My Selling Process, Marketing Philosophy, Pricing Philosophy, Fee Structure), I'll ask targeted questions in Step D.*
+>
+> *Want me to pre-populate from buyer-pres-template, or start fresh with the full Step A data dump?"*
+
+If realtor accepts inheritance: pre-populate the section structure with the inherited content. Skip Step A's data dump for the covered sections (still do Step A for any uncovered material the realtor wants to add). Proceed to Step D (gap-fill) for the remaining sections.
+
+If realtor wants to start fresh: skip the inheritance, fall through to Step A.
+
+### Step A — Front-loaded data dump (fallback for sections not inherited at Step 0)
 
 Ask once, in a single message:
 
