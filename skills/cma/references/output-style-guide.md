@@ -492,6 +492,17 @@ Every tabbed template must include a `@media print` block that:
     page-break-before: avoid;
   }
 
+  /* Force visible tab panels — override §8 fadeIn animation that captures as opacity 0 in headless Chrome */
+  .tab-panel {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  /* Toolkit branding hidden on client-facing print — funnel hook is internal */
+  .funnel-hook {
+    display: none !important;
+  }
+
   /* Expand all accordions */
   details,
   details > * {

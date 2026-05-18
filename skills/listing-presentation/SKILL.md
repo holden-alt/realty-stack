@@ -83,7 +83,17 @@ Load `references/html-template-listing-presentation.html`. Substitute every `{{P
 
 Default path: `~/Downloads/<property-slug>-listing-presentation.html`. Slug = lowercased street address with non-alphanumerics replaced by hyphens (e.g., `1247-plainfield-ave-ne-listing-presentation.html`). Path conflict → append timestamp suffix (`<slug>-listing-presentation-2026-05-17-1430.html`); never overwrite silently. Realtor override "save to [path]" honored.
 
-Confirm path back verbatim: *"Saved to ~/Downloads/{slug}-listing-presentation.html — open in Chrome / Safari to preview, ⌘P prints cleanly with all tabs expanded."*
+After writing the HTML, run headless Chrome to produce a PDF:
+
+```
+bash skills/listing-presentation/scripts/render-pdf.sh \
+  ~/Downloads/{slug}-listing-presentation.html \
+  ~/Downloads/{slug}-listing-presentation.pdf
+```
+
+Confirm BOTH paths back: *"Saved to ~/Downloads/{slug}-listing-presentation.html (browser preview) and ~/Downloads/{slug}-listing-presentation.pdf (print/email-ready). Open the HTML in Chrome to interact with tabs, or attach the PDF to your appointment confirmation email."*
+
+If `render-pdf.sh` exits non-zero (Chrome not found or render error), still confirm the HTML path and tell the realtor: *"Saved HTML to ~/Downloads/{slug}-listing-presentation.html. Couldn't auto-generate PDF — install Chrome from google.com/chrome to get auto-PDF, or open the HTML in any browser and Cmd+P → Save as PDF."*
 
 ---
 
@@ -191,6 +201,8 @@ Template prose is already drafted in Email Voice at template build time — do N
 | Realtor wants different brand for this specific listing | Out of scope for v0.0.4 — uses active brand kit. |
 | Output file path already exists | Append timestamp suffix; never overwrite silently. |
 | Realtor mid-flow asks unrelated question | Pause gracefully, answer, offer to resume. Do not lose collected per-listing state. |
+| Chrome / Chromium not installed | `render-pdf.sh` exits with error; skill catches it, writes HTML anyway, tells realtor: *"Saved HTML to ~/Downloads/{slug}-listing-presentation.html. Couldn't auto-generate PDF — install Chrome from google.com/chrome to get auto-PDF, or open the HTML in any browser and Cmd+P → Save as PDF."* |
+| PDF rendering fails for other reason | Same fallback as above — HTML always lands; PDF is best-effort. |
 
 ---
 

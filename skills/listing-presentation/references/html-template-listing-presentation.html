@@ -583,6 +583,17 @@ nav.tabs {
     page-break-before: avoid;
   }
 
+  /* Force visible tab panels — override §8 fadeIn animation that captures as opacity 0 in headless Chrome */
+  .tab-panel {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  /* Toolkit branding hidden on client-facing print — funnel hook is internal */
+  .funnel-hook {
+    display: none !important;
+  }
+
   /* Expand all accordions */
   details,
   details > * {
@@ -646,6 +657,61 @@ nav.tabs {
   h2 { font-size: 22pt; }
   h3 { font-size: 14pt; }
   h4 { font-size: 12pt; }
+}
+
+/* ============ LISTING-PRESENTATION SPECIFIC PRINT OVERRIDES ============ */
+/* Fix bugs surfaced in Holden's e2e — see v0.0.4 patch notes */
+@media print {
+  /* Force desktop cover hero grid in print — letter paper renders ~720px which triggers
+     the 768px mobile-stacking; this override re-engages the desktop two-column layout
+     so the headshot stays right-side, not tiny on top. */
+  .cover-hero {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "wordmark photo"
+      "h1      photo"
+      "seller  photo"
+      "address ."
+      "date    ."
+      "note    ." !important;
+    gap: 8px 32px !important;
+    padding: 48px 32px 40px !important;
+  }
+  .agent-photo {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  /* Footer: keep agent line together, hide toolkit branding (logo too — only the
+     CSS-rendered wordmark on the cover should show brand identity) */
+  .page-footer {
+    page-break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    padding: 14px 32px !important;
+  }
+  .footer-logo { display: none !important; }
+  .agent-line { margin-bottom: 0 !important; }
+
+  /* Tighter section block spacing — reduces wasted pages */
+  .section-block { padding: 18px 0 !important; }
+  .section-block h3 { margin-bottom: 10px !important; }
+  .section-content p, .section-content li {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Tighter testimonial cards */
+  .testimonial-card {
+    padding: 14px 18px !important;
+    margin: 10px 0 !important;
+  }
+  .testimonial-quote {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    margin-bottom: 8px !important;
+  }
 }
 </style>
 </head>
