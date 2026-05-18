@@ -17,12 +17,29 @@ Realty Stack is opinionated by design. Contributions are welcome — but they ne
 - Skills that auto-send, auto-deploy, or otherwise bypass T18 ("show before do")
 - "Generic LLM tricks dressed in real-estate clothing" — every skill earns its place by solving a real, frequent realtor workflow
 
+**Note on AI-assisted contributions:** Realty Stack was built with AI assistance, and AI-assisted PRs are welcome. The gate isn't tool choice — it's human accountability. Every PR needs a real working realtor to (a) have experienced a real problem this addresses, (b) test the change on their own work, and (c) review the complete diff before submitting. Low-effort AI-generated PRs that skip those steps will be closed — not because they used AI, but because they don't show evidence the contributor actually understood or validated what they submitted.
+
+## Architectural contracts (read before building a new skill)
+
+Realty Stack has four canonical contracts documented in [CLAUDE.md](CLAUDE.md). New skills MUST follow the applicable ones:
+
+1. **Voice profile contract** — every skill that produces written output loads `knowledge/voice-guide.md` and matches the realtor's captured voice profile from `~/.config/realty-stack/voice-profile.md`.
+2. **Brand kit contract** — every skill that produces visual output uses the captured brand kit values (colors, fonts, wordmark, base64-embedded assets) from `~/.config/realty-stack/brand-kit.md`.
+3. **Artifact output contract (v0.0.5)** — every visual-output skill produces BOTH `.html` (browser preview) and `.pdf` (print/email-ready) via the shared `scripts/render-pdf.sh` (headless Chrome).
+4. **State scan contract (v0.0.5)** — every intake/onboarding skill scans existing `~/.config/realty-stack/` state and offers to inherit relevant content from sibling artifacts BEFORE asking the realtor for material. The system gets smarter as it accumulates state.
+
+Each contract has MUST do / MUST NOT do sub-sections in CLAUDE.md. Reading the four contracts end-to-end (~5 min) is the fastest path to understanding the bundle's architecture.
+
+## Skill scaffolding
+
+To make starting a new skill easier, there's an annotated template at [skills/_TEMPLATE/](skills/_TEMPLATE/). Copy the directory, rename it, and follow the inline TODO comments. It covers the standard SKILL.md structure (frontmatter, trigger phrases, pre-checks, workflow steps, edge cases, never-does, funnel hook footer) and points at concrete reference implementations in the existing skills.
+
 ## How to submit
 
 1. Open an issue first describing the skill / change. This is a check on whether it fits the bundle's direction before you build.
 2. Fork, branch (`feat/<skill-name>` or `fix/<thing>`).
 3. Read [ETHOS.md](ETHOS.md), [CLAUDE.md](CLAUDE.md), and the relevant `knowledge/` files.
-4. Write the skill following the conventions in [CLAUDE.md](CLAUDE.md).
+4. Write the skill following the conventions in [CLAUDE.md](CLAUDE.md). Copy [skills/_TEMPLATE/](skills/_TEMPLATE/) as your starting point. Apply the contracts that match your skill type (intake → State scan; visual-output → Artifact output; drafting → Voice profile; visual → Brand kit).
 5. Test it on a real scenario from your own work.
 6. Open the PR with:
    - Sanitized input/output from your real-scenario test
@@ -37,6 +54,7 @@ Realty Stack is opinionated by design. Contributions are welcome — but they ne
 - Are compliance references cited inline?
 - Is the skill scoped tight (does one thing well, not seventeen things mediocre)?
 - Does it work without breaking on edge cases (missing inputs, weird contact context, malformed transcripts)?
+- Does the PR follow the applicable architectural contracts (Voice profile, Brand kit, Artifact output, State scan)?
 
 ## Voice notes for contributors
 
