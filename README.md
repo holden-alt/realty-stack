@@ -2,7 +2,7 @@
 
 **AI skills for residential real estate agents who actually close deals.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.3-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Version](https://img.shields.io/badge/version-0.0.4-orange.svg)](VERSION) [![Claude](https://img.shields.io/badge/built%20for-Claude-purple.svg)](https://claude.ai)
 
 Open-source. MIT. Free. Built by a working realtor who codes — for working realtors who want their AI to sound like *them*, not like a marketing intern.
 
@@ -31,7 +31,7 @@ Then in any Claude Code or Cowork session, ask Claude to "load realty stack" (or
 
 After that, just describe what you need: *"draft a text to Sarah about the new Madison Ave listing"* — Claude routes to the right skill (`voice-draft` in this case) automatically. No slash-typing required.
 
-**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.3. We'll add them based on demand from real users.
+**Other surfaces** (Claude.ai chat, Codex, Cursor, Gemini) are not supported in v0.0.4. We'll add them based on demand from real users.
 
 ---
 
@@ -67,7 +67,7 @@ Real onboarding sequence from a fresh install:
 
 ---
 
-## Skills (v0.0.3)
+## Skills (v0.0.4)
 
 Skills auto-route based on what you ask Claude. You don't type slashes — you describe what you need.
 
@@ -76,6 +76,8 @@ Skills auto-route based on what you ask Claude. You don't type slashes — you d
 | `brand-kit-capture` (one-time, on install) | Auto-fires alongside voice-draft on first install; also "set up my brand", "add my logo", "configure my brand kit" | Captures the realtor's visual brand kit (colors, typography, wordmark, optional logo/headshot). Persists to `~/.config/realty-stack/brand-kit.md`. Required by `/cma` and every future visual-output skill. ~5 min one-time setup. |
 | `voice-draft` (one-time, on install) | Auto-fires on first session post-install; also "set up my voice", "onboard me", "configure realty stack" | Captures the realtor's email + text voice + basic profile. Persists to `~/.config/realty-stack/voice-profile.md`. Future drafting skills auto-use it. ~5 min one-time setup. |
 | `cma` | "create a CMA for...", "comp this property", "offer strategy for...", "listing presentation for...", "what's a fair offer on..." | Produces a self-contained branded HTML CMA presentation. Seller mode: 4-tab listing presentation (Overview, CMA, Net Sheet, Marketing). Buyer mode: 3-tab offer strategy (Scenarios, Math, Mortgage Calculator). URAR-aligned methodology, live nationwide research per invocation, post-write feedback loop. |
+| `listing-presentation-template` (one-time, when needed) | "set up my listing presentation", "build my listing pitch", "create my listing presentation template" | Captures the realtor's reusable listing-presentation content (about-me, process, marketing philosophy, track record, testimonials, pricing, fees). 8 standard sections, flexible. Persists to `~/.config/realty-stack/listing-presentation-template.md`. Required by `/listing-presentation`. ~30 min one-time setup. |
+| `listing-presentation` | "make a listing presentation for...", "I have a listing appointment with...", "prepare for my listing appointment at...", "build my pitch for..." | Generates a per-appointment 4-tab branded HTML pitch (Who I Am / How I Work / Track Record / Working Together) from the saved template + light personalization (seller name, address, appointment date, optional custom note). Optional inline `/cma` offer at Step 3 — one appointment, both artifacts. |
 
 More skills land daily — see [CHANGELOG.md](CHANGELOG.md) for the rolling release log.
 

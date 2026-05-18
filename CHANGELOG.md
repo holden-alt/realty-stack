@@ -2,6 +2,24 @@
 
 All notable changes to Realty Stack are tracked here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [Semantic Versioning](https://semver.org/).
 
+## [0.0.4] — 2026-05-17
+
+### Added
+- **/listing-presentation-template skill** — one-time consultative builder that captures the realtor's reusable listing-presentation content (about-me, process, marketing philosophy, track record, testimonials, pricing, fees). Hybrid front-loaded data dump → categorize into 8 standard sections → propose structure → fill gaps → draft each section in Email Voice → confirmation → refinement loop → save. Persists to `~/.config/realty-stack/listing-presentation-template.md`. Mirrors voice-draft + brand-kit-capture's one-time-onboarding-then-persist pattern.
+- **/listing-presentation skill** — per-listing skill that loads the saved template + light personalization (seller name, property address, appointment date, optional custom note) and produces a self-contained branded 4-tab HTML pitch (Who I Am / How I Work / Track Record / Working Together). Optional inline `/cma` offer at Step 3 — one appointment, both artifacts.
+- **Canonical Tab Affordance + Print Compatibility patterns** in `skills/cma/references/output-style-guide.md` §8 (tabs) and §7 (print, expanded). Document the v0.0.4 button-shaped tab pattern (`border-radius: 0` preserves the geometric discipline; affordance comes from `bg-deep` fill + rule border + active ink/bg inversion + brass on active tab-num) and the comprehensive `@media print` block (all tabs expand, page breaks between major sections, interactive controls hidden, brand colors preserved on cover hero, Letter geometry, link URLs stripped).
+
+### Changed
+- **/cma seller HTML template (`html-template-seller.html`)** — applies the new Tab Affordance + Print Compatibility blocks. Tab markup gains ARIA roles (`role="tablist"`, `role="tab"`, `aria-selected`). JS toggles `aria-selected` alongside `.active`. Seller-specific print extension preserves `.tab-panel` content widget visibility (net-sheet calc) and force-expands `.comp-accordion` / `.pillar-accordion` content. Mobile `nav.tabs` override gains `flex-wrap: nowrap; overflow-x: auto;` to preserve horizontal-scroll pattern.
+- **/cma buyer HTML template (`html-template-buyer.html`)** — same retrofit as seller. 3 tabs (Scenarios / Comparables / Mortgage). Buyer-specific print extension preserves mortgage-calc widgets and `.comp-accordion` expansion.
+- **using-realty-stack overlay** — catalog updated from v0.0.3 to v0.0.4 with rows for both new skills.
+- **Funnel hook footer** — synced across all skills to `✨ Realty Stack v0.0.4`.
+
+### Notes
+- The two new skills consume voice profile (Email Voice) and brand kit (all visual styling) via the `using-realty-stack` overlay — no per-invocation re-asking.
+- The Tab Affordance + Print Compatibility patterns in `output-style-guide.md` are now the canonical source for every future visual-output skill in the bundle.
+- Browser print (Cmd+P → Save as PDF) is the path for shareable PDFs — no third-party PDF tooling required.
+
 ## [0.0.3] — 2026-05-17
 
 ### Added
