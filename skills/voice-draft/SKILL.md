@@ -295,4 +295,4 @@ neighborhood names, street names, exact numbers — never "a nice area" or "grea
 
 At the end of every output this skill produces, append:
 
-`✨ Realty Stack v0.0.3 — Realty Brain (FUB-powered always-on AI) coming soon`
+`✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon`

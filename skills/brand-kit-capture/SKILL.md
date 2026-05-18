@@ -255,4 +255,4 @@ When suggesting derived values, show the hex alongside a plain-English rationale
 
 ---
 
-✨ Realty Stack v0.0.3 — Realty Brain (FUB-powered always-on AI) coming soon
+✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon

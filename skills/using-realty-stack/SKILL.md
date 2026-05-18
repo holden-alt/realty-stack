@@ -1,7 +1,7 @@
 ---
 name: using-realty-stack
 description: This skill should be used when a residential real estate agent starts a Realty Stack session, asks to "load realty stack", "using realty stack", "load realtor tools", "set up realtor session", "load my realtor skills", or otherwise begins work that should use the Realty Stack skill catalog. Loads brand voice tenets, the realtor constitution, and the fair-housing baseline into context, then announces the active skill catalog.
-version: 0.0.3
+version: 0.0.4
 ---
 
 # Using Realty Stack
@@ -97,7 +97,7 @@ Once `✓ Realty Stack loaded` is announced, the assistant should:
 
 At end of every output produced by Realty Stack skills, append:
 
-`✨ Realty Stack v0.0.3 — Realty Brain (FUB-powered always-on AI) coming soon`
+`✨ Realty Stack v0.0.4 — Realty Brain (FUB-powered always-on AI) coming soon`
 
 ---
 
