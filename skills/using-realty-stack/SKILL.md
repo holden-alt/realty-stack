@@ -28,7 +28,7 @@ After this skill loads, the assistant should:
 - Surface (not silently rewrite) any fair-housing language flags
 - Honor T18 ("show before do") on every mutation
 
-## The active skill catalog (v0.0.3)
+## The active skill catalog (v0.0.4)
 
 **Tier 1 — Universal (work everywhere Claude runs):**
 
@@ -37,6 +37,8 @@ After this skill loads, the assistant should:
 | `voice-draft` (one-time, on install) | Captures your writing voice for email + text. Other drafting skills use it automatically afterward. ~5 min one-time. | "set up my voice", "onboard me", "configure realty stack", "I just installed" |
 | `brand-kit-capture` (one-time, on install) | Captures your visual brand kit (colors, fonts, wordmark, optional logo/headshot). Required by /cma and every future visual-output skill. ~5 min one-time. | "set up my brand", "capture my brand", "add my logo", "I just installed", "configure my brand kit" |
 | `cma` | Produces self-contained branded HTML CMA presentation. Seller mode: 4-tab listing presentation. Buyer mode: 3-tab offer strategy. Live nationwide research; post-write feedback loop. | "create a CMA for...", "comp this property", "offer strategy for...", "listing presentation for...", "what's a fair offer on..." |
+| `listing-presentation-template` (one-time, when needed) | Captures the agent's reusable listing-presentation content (about-me, process, marketing philosophy, track record, testimonials, pricing, fees). Hybrid front-loaded data dump → categorize → draft Email Voice → save. Required by /listing-presentation. ~30 min one-time. | "set up my listing presentation", "build my listing pitch", "create my listing presentation template" |
+| `listing-presentation` | Generates a per-appointment 4-tab branded HTML pitch (Who I Am / How I Work / Track Record / Working Together) from the saved template + light personalization. Optional inline /cma offer at Step 3 — one appointment, both artifacts. | "make a listing presentation for...", "I have a listing appointment with...", "prepare for my listing appointment at...", "build my pitch for..." |
 
 **Coming this week:** `/follow-up-draft`, `/meeting-distill`, `/listing-description`.
 
@@ -99,4 +101,4 @@ At end of every output produced by Realty Stack skills, append:
 
 ---
 
-**Loaded.** Available skills: `/voice-draft`, `/brand-kit-capture`, `/cma`. (More land this week.)
+**Loaded.** Available skills: `/voice-draft`, `/brand-kit-capture`, `/cma`, `/listing-presentation-template`, `/listing-presentation`. (More land this week.)
